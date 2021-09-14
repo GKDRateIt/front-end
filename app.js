@@ -14,8 +14,10 @@ const router = VueRouter.createRouter({
     routes: routes
 });
 
-header.mount("#header-container");
 const mainBody = Vue.createApp({});
+
 mainBody.use(router);
 header.use(router);
+
+header.mount("#header-container");
 mainBody.mount("#main-body");

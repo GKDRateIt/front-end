@@ -25,11 +25,11 @@ const headerComponent = {
     template: `<header>
                     <div :style="navBarStyles">
                         <nav :style="navLinkContainerStyles">
-                            <div :style="navLinkStyles" @click="redirect('courses')">
-                                    搜课程
+                            <div :style="navLinkStyles">
+                                    <router-link to="/courses">搜课程</router-link>
                             </div>
-                            <div  :style="navLinkStyles" @click="redirect('teachers')">
-                                搜老师
+                            <div  :style="navLinkStyles">
+                            <router-link to="/teachers">搜老师</router-link>
                             </div>
                         </nav>
                     </div>
