@@ -3,10 +3,10 @@
     <div>
       <nav>
         <div>
-          <router-link to="/courses">搜课程</router-link>
+          <router-link to="/courses">课程列表</router-link>
         </div>
         <div>
-          <router-link to="/teachers">搜老师</router-link>
+          <router-link to="/teachers">教师列表</router-link>
         </div>
       </nav>
     </div>
