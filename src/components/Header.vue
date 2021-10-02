@@ -2,6 +2,7 @@
 import { NIcon } from "naive-ui";
 import { Course } from "@vicons/carbon";
 import { HatGraduation24Filled } from "@vicons/fluent";
+import { UserGraduate } from "@vicons/fa";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -9,6 +10,7 @@ export default defineComponent({
     NIcon,
     Course,
     HatGraduation24Filled,
+    UserGraduate,
   },
 });
 </script>
@@ -24,8 +26,9 @@ export default defineComponent({
     <!-- right side -->
     <div class="right-side">
       <nav>
+        <!-- Teachers -->
         <div class="block">
-          <router-link to="/courses">
+          <router-link to="/teachers">
             <div>
               <n-icon size="30">
                 <hat-graduation-24-filled />
@@ -34,8 +37,9 @@ export default defineComponent({
             </div>
           </router-link>
         </div>
+        <!-- Courses -->
         <div class="block">
-          <router-link to="/teachers">
+          <router-link to="/courses">
             <div>
               <n-icon size="30">
                 <course />
@@ -43,6 +47,15 @@ export default defineComponent({
               课程列表
             </div>
           </router-link>
+        </div>
+        <!-- Porfile -->
+        <div class="block">
+          <div>
+            <n-icon size="30">
+              <user-graduate />
+            </n-icon>
+            个人主页
+          </div>
         </div>
       </nav>
     </div>
@@ -60,7 +73,7 @@ hr {
   margin-top: 0;
   position: sticky;
   top: 0px;
-  background-color: whitesmoke;
+  background-color: rgb(245, 245, 245);
 }
 
 .left-side {
