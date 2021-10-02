@@ -1,5 +1,12 @@
-<script setup>
-import Header from "./components/Header.vue";
+<script>
+import { defineComponent } from "vue";
+import Header  from "./components/Header.vue";
+
+export default defineComponent({
+  components: {
+    Header,
+  },
+});
 </script>
 
 <template>
