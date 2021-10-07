@@ -1,16 +1,30 @@
 <script>
-import { NIcon } from "naive-ui";
+import { NIcon, NAutoComplete } from "naive-ui";
 import { Course } from "@vicons/carbon";
-import { HatGraduation24Filled } from "@vicons/fluent";
+import { HatGraduation24Filled, Search48Regular } from "@vicons/fluent";
 import { UserGraduate } from "@vicons/fa";
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { tHotSearch } from "../tools/hotSearch.js";
 
 export default defineComponent({
   components: {
     NIcon,
+    NAutoComplete,
     Course,
     HatGraduation24Filled,
     UserGraduate,
+    Search48Regular,
+  },
+  computed: {
+    hotSearch() {
+      var res = tHotSearch(this.searchBoxValueRef);
+      return res;
+    },
+  },
+  data() {
+    return {
+      searchBoxValueRef: ref(""),
+    };
   },
 });
 </script>
@@ -23,9 +37,24 @@ export default defineComponent({
         <div class="block">[标志图](主页)</div>
       </router-link>
     </div>
+
     <!-- right side -->
     <div class="right-side">
-      <nav>
+      <div class="block">
+        <div id="header-search-box-container">
+          <n-icon size="30" id="header-search-icon">
+            <search-48-regular />
+          </n-icon>
+          <n-auto-complete
+            id="header-search-box-input"
+            :options="hotSearch"
+            v-model:value="searchBoxValueRef"
+            placeholder="搜索"
+          />
+        </div>
+      </div>
+
+      <nav class="block">
         <!-- Teachers -->
         <div class="block">
           <router-link to="/teachers">
@@ -59,21 +88,22 @@ export default defineComponent({
         </div>
       </nav>
     </div>
-    <hr />
+    <div class="header-grad-bottom"></div>
   </div>
 </template>
 
 <style>
-hr {
-  color: gainsboro;
-}
-
 .header {
   width: 100%;
   margin-top: 0;
   position: sticky;
   top: 0px;
-  background-color: rgb(245, 245, 245);
+  background-color: white;
+}
+
+.header-grad-bottom {
+  height: 10px;
+  background-image: linear-gradient(180deg, rgb(212, 212, 212), white);
 }
 
 .left-side {
@@ -92,5 +122,10 @@ hr {
 .block {
   display: inline-block;
   padding: 10px;
+}
+
+#header-search-box-container {
+  display: flex;
+  padding-right: 20px;
 }
 </style>
