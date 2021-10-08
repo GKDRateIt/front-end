@@ -5,7 +5,7 @@ import { Search48Regular } from "@vicons/fluent";
 
 export default defineComponent({
   props: {
-    flexibleDefault: Boolean,
+    flexible: Boolean,
   },
   setup(props) {
     const searchBoxValRef = ref("");
@@ -16,7 +16,6 @@ export default defineComponent({
         message.info(`Submitted search for ${searchStr}`);
       },
       searchVal: searchBoxValRef,
-      flexible: props.flexibleDefault,
       inputPopUp: computed(() => {
         const categories = ["老师", "课程", "帮助"];
         return categories.map((category) => {
@@ -46,6 +45,7 @@ export default defineComponent({
   data() {
     return {
       searchBoxHover: !this.flexible,
+      inputIssue: false,
     };
   },
 
@@ -57,27 +57,18 @@ export default defineComponent({
       }
     },
 
-    setFlexible(val) {
-      if (this.flexibleDefault) {
-        console.log(`Search box change flexible to ${val}`);
-        this.flexible = val;
-      }
-    },
-
     inputFoucus() {
       console.log("FOCUS!!!");
-      this.setFlexible(false);
+      this.inputIssue = true;
     },
 
     inputBlur() {
       console.log("BLUR!!!");
-      this.setFlexible(true);
+      this.inputIssue = false;
     },
 
     inputSelect() {
       console.log("Select!!!");
-      this.setFlexible(true);
-      this.setHover(false);
       this.submitSearch();
     },
   },
@@ -85,7 +76,7 @@ export default defineComponent({
   computed: {
     searchBoxInputWidth() {
       if (this.flexible) {
-        if (this.searchBoxHover) {
+        if (this.searchBoxHover || this.inputIssue) {
           return "95%";
         } else {
           return "10%";
@@ -96,7 +87,7 @@ export default defineComponent({
     },
 
     searchBoxInputOpacity() {
-      if (this.searchBoxHover) {
+      if (this.searchBoxHover || this.inputIssue) {
         return 1;
       } else {
         return 0;
@@ -133,6 +124,7 @@ export default defineComponent({
     >
       <n-auto-complete
         :options="inputPopUp"
+        blur-after-select
         placeholder="搜索"
         v-model:value="searchVal"
         :on-select="inputSelect"

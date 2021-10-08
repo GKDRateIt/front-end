@@ -66,7 +66,7 @@ export default defineComponent({
       <!-- right side -->
       <div id="right-side">
         <div id="search-box" class="header-item-vertical">
-          <search-box :flexibleDefault="true" />
+          <search-box :flexible="true" />
         </div>
 
         <nav id="navs">
