@@ -1,131 +1,175 @@
 <script>
-import { NIcon, NAutoComplete } from "naive-ui";
+import { NIcon } from "naive-ui";
 import { Course } from "@vicons/carbon";
-import { HatGraduation24Filled, Search48Regular } from "@vicons/fluent";
+import { HatGraduation24Filled } from "@vicons/fluent";
 import { UserGraduate } from "@vicons/fa";
-import { defineComponent, ref } from "vue";
-import { tHotSearch } from "../tools/hotSearch.js";
+import { defineComponent } from "vue";
+import SearchBox from "./SearchBox.vue";
 
 export default defineComponent({
   components: {
     NIcon,
-    NAutoComplete,
     Course,
     HatGraduation24Filled,
     UserGraduate,
-    Search48Regular,
-  },
-  computed: {
-    hotSearch() {
-      var res = tHotSearch(this.searchBoxValueRef);
-      return res;
-    },
+    SearchBox,
   },
   data() {
     return {
-      searchBoxValueRef: ref(""),
+      headerOpacity: 1.0,
+      headerBottomOpacity: 0.5,
+      alternatePos: 0.0,
     };
+  },
+  methods: {
+    handleScroll(event) {
+      console.log("Scrolled down");
+      var gap = Math.floor((100 * window.scrollY) / window.innerHeight);
+      this.headerBottomOpacity = 0.5 + Math.min(gap, 25) * 0.02;
+      if (this.$route.fullPath == "/") {
+        this.headerOpacity = Math.min(gap, 25) * 0.04;
+      }
+    },
+  },
+
+  mounted() {
+    document.addEventListener("scroll", this.handleScroll);
+    this.$router.beforeEach((to, from) => {
+      console.log(from);
+      console.log(to);
+      if (to.fullPath == "/") {
+        this.headerOpacity = 0.0;
+      } else {
+        this.headerOpacity = 1.0;
+      }
+    });
+  },
+
+  beforeDestroy() {
+    document.removeEventListener("scroll", this.handleScroll);
   },
 });
 </script>
 
 <template>
-  <div class="header">
-    <!-- left side -->
-    <div class="left-side">
-      <router-link to="/">
-        <div class="block">[标志图](主页)</div>
-      </router-link>
-    </div>
-
-    <!-- right side -->
-    <div class="right-side">
-      <div class="block">
-        <div id="header-search-box-container">
-          <n-icon size="30" id="header-search-icon">
-            <search-48-regular />
-          </n-icon>
-          <n-auto-complete
-            id="header-search-box-input"
-            :options="hotSearch"
-            v-model:value="searchBoxValueRef"
-            placeholder="搜索"
-          />
+  <div id="header-container" :style="{ opacity: headerOpacity }">
+    <div id="raw-header">
+      <!-- left side -->
+      <div id="left-side">
+        <div id="header-icon" class="header-item-vertical">
+          <router-link to="/">
+            <div>[标志图](主页)</div>
+          </router-link>
         </div>
       </div>
 
-      <nav class="block">
-        <!-- Teachers -->
-        <div class="block">
-          <router-link to="/teachers">
-            <div>
-              <n-icon size="30">
-                <hat-graduation-24-filled />
-              </n-icon>
-              教师列表
-            </div>
-          </router-link>
+      <!-- right side -->
+      <div id="right-side">
+        <div id="search-box" class="header-item-vertical">
+          <search-box :flexibleDefault="true" />
         </div>
-        <!-- Courses -->
-        <div class="block">
-          <router-link to="/courses">
-            <div>
-              <n-icon size="30">
-                <course />
-              </n-icon>
-              课程列表
-            </div>
-          </router-link>
-        </div>
-        <!-- Porfile -->
-        <div class="block">
-          <div>
-            <n-icon size="30">
-              <user-graduate />
-            </n-icon>
-            个人主页
+
+        <nav id="navs">
+          <!-- Teachers -->
+          <div class="right-block header-item-vertical">
+            <router-link to="/teachers">
+              <div>
+                <n-icon size="30">
+                  <hat-graduation-24-filled />
+                </n-icon>
+                教师列表
+              </div>
+            </router-link>
           </div>
-        </div>
-      </nav>
+          <!-- Courses -->
+          <div class="right-block header-item-vertical">
+            <router-link to="/courses">
+              <div>
+                <n-icon size="30">
+                  <course />
+                </n-icon>
+                课程列表
+              </div>
+            </router-link>
+          </div>
+          <!-- Porfile -->
+          <div class="right-block header-item-vertical">
+            <div>
+              <n-icon size="30">
+                <user-graduate />
+              </n-icon>
+              个人主页
+            </div>
+          </div>
+        </nav>
+      </div>
     </div>
-    <div class="header-grad-bottom"></div>
+    <div
+      id="header-grad-bottom"
+      :style="{ opacity: headerBottomOpacity }"
+    ></div>
   </div>
 </template>
 
 <style>
-.header {
-  width: 100%;
-  margin-top: 0;
-  position: sticky;
-  top: 0px;
-  background-color: white;
+.header-item-vertical {
+  top: 25%;
+  position: relative;
 }
 
-.header-grad-bottom {
-  height: 10px;
+#header-container {
+  position: sticky;
+  top: 0;
+  height: 10vh;
+  z-index: 10;
+}
+
+#raw-header {
+  width: 100%;
+  margin-top: 0;
+  top: 0px;
+  background-color: white;
+  display: flex;
+  height: 90%;
+}
+
+#header-grad-bottom {
+  height: 10%;
   background-image: linear-gradient(180deg, rgb(212, 212, 212), white);
 }
 
-.left-side {
-  text-align: left;
-  float: left;
-  padding-left: 20px;
+#left-side {
+  width: 15%;
 }
 
-.right-side {
-  text-align: right;
-  /* float: right; */
-  /* I don't know why. But we only need put `float` for left-side. Or error occurs */
-  padding-right: 20px;
+#header-icon {
+  margin-left: 0;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 10%;
 }
 
-.block {
-  display: inline-block;
-  padding: 10px;
-}
-
-#header-search-box-container {
+#right-side {
   display: flex;
-  padding-right: 20px;
+  margin-right: 0;
+  margin-left: auto;
+  width: 70%;
+  justify-content: flex-end;
+}
+
+#search-box {
+  padding-right: 5%;
+  width: 40%;
+}
+
+#navs {
+  display: flex;
+  width: 30%;
+  justify-content: flex-end;
+}
+
+.right-block {
+  padding-right: 5%;
 }
 </style>
