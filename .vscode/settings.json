@@ -3,5 +3,7 @@
         "javascript",
         "javascriptreact",
         "vue"
-    ]
+    ],
+    "editor.tabSize": 2,
+    "eslint.format.enable": true
 }
