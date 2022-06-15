@@ -7,14 +7,6 @@ const props = defineProps({
     type: String,
     default: "???",
   },
-  needValidation: {
-    type: Boolean,
-    default: false,
-  },
-  validator: {
-    type: () => Boolean,
-    default: () => false,
-  },
 });
 </script>
 
