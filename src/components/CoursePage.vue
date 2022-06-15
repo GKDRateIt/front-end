@@ -1,23 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { NButton } from "naive-ui";
-import { Semester, CourseCategory } from "../common";
-
-const courseName = computed(() => {
-  return "[课程名称占位符]";
-});
-
-interface CourseAttribute {
-  id: string;
-  teacher: string;
-  grade: number;
-  semester: Semester;
-  category: CourseCategory;
-}
+import { CourseAttribute } from "../common";
 
 const courseAttribute = computed((): CourseAttribute | undefined => {
   return {
     id: "???",
+    name: "某课程",
     teacher: "X",
     grade: 2.0,
     semester: "春季学期",
@@ -72,7 +61,9 @@ const getCourseReviews = (
 
 <template>
   <div class="flex-col w-[80vw] mt-[8vh] mx-auto space-y-8">
-    <div class="text-4xl">{{ courseName }} ({{ $route.query.courseId }})</div>
+    <div class="text-4xl">
+      {{ courseAttribute.name }} ({{ $route.query.courseId }})
+    </div>
     <div class="flex space-x-5">
       <div class="text-lg flex space-x-2 leading-10 bg-gray-100 rounded-md">
         <div class="flex space-x-2">
