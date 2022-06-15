@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { ref, Ref, computed } from "vue";
+import { ref, Ref, computed, defineProps } from "vue";
 import { NAutoComplete } from "naive-ui";
+
+const props = defineProps({
+  placeholder: {
+    type: String,
+    default: "输入你想查询的课程名称或主讲教师",
+  },
+});
 
 const inputData: Ref<string> = ref("");
 
@@ -28,7 +35,7 @@ const submitSearch = computed(() => {
     <n-auto-complete
       v-model:value="inputData"
       size="large"
-      placeholder="输入你想查询的课程名称或主讲教师"
+      :placeholder="props.placeholder"
       :options="submitSearch"
     />
   </div>

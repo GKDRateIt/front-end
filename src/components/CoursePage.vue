@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { NButton } from "naive-ui";
+import { Semester, CourseCategory } from "../common";
 
 const courseName = computed(() => {
   return "[课程名称占位符]";
 });
 
-const courseAttribute = computed(() => {
-  return ["主讲教师：XXX", "学分 2.0", "开课学期 春季", "专业必修课"];
+interface CourseAttribute {
+  id: string;
+  teacher: string;
+  grade: number;
+  semester: Semester;
+  category: CourseCategory;
+}
+
+const courseAttribute = computed((): CourseAttribute | undefined => {
+  return {
+    id: "???",
+    teacher: "X",
+    grade: 2.0,
+    semester: "春季学期",
+    category: "专业必修课",
+  };
 });
 
 const courseRating = computed(() => {
@@ -28,45 +43,55 @@ interface Review {
   from: string;
 }
 
-const courseReviews = computed(
-  (sortMethod: String, start: Number, end: Number): Array<Review> => {
-    console.log(`Querying [${start},${end}) reviews by ${sortMethod}...`);
-    return [
-      {
-        id: 0,
-        courseSelectedAt: "2017 春季学期",
-        rate: 1.7,
-        rateAt: "2017-06-06",
-        review: "xx 老师的课xxxxxxxxxxxxxxxxxxxxx",
-        from: "A",
-      },
-      {
-        id: 1,
-        courseSelectedAt: "2022 春季学期",
-        rate: 2.8,
-        rateAt: "2022-06-06",
-        review: "xx 老师的课xxxxxxxxxxxxxxxxxxxxx",
-        from: "B",
-      },
-    ];
-  }
-);
+const getCourseReviews = (
+  sortMethod: String,
+  start: Number,
+  end: Number
+): Array<Review> => {
+  console.log(`Querying [${start},${end}) reviews by ${sortMethod}...`);
+  return [
+    {
+      id: 0,
+      courseSelectedAt: "2017 春季学期",
+      rate: 1.7,
+      rateAt: "2017-06-06",
+      review: "xx 老师的课xxxxxxxxxxxxxxxxxxxxx",
+      from: "A",
+    },
+    {
+      id: 1,
+      courseSelectedAt: "2022 春季学期",
+      rate: 2.8,
+      rateAt: "2022-06-06",
+      review: "xx 老师的课xxxxxxxxxxxxxxxxxxxxx",
+      from: "B",
+    },
+  ];
+};
 </script>
 
 <template>
   <div class="flex-col w-[80vw] mt-[8vh] mx-auto space-y-8">
-    <div class="text-4xl">{{ courseName }} ({{ $route.params.courseId }})</div>
+    <div class="text-4xl">{{ courseName }} ({{ $route.query.courseId }})</div>
     <div class="flex space-x-5">
       <div class="text-lg flex space-x-2 leading-10 bg-gray-100 rounded-md">
-        <div v-for="(attr, index) in courseAttribute" :key="index">
-          <span
-            :class="{
-              'ml-5': index == 0,
-              'mr-5': index == courseAttribute.length - 1,
-            }"
-            >{{ attr }}</span
-          >
-          <span v-if="index != courseAttribute.length - 1" class="ml-2">|</span>
+        <div class="flex space-x-2">
+          <div>主讲老师</div>
+          <div>{{ courseAttribute.teacher }}</div>
+        </div>
+        <div>|</div>
+        <div class="flex space-x-2">
+          <div>学分</div>
+          <div>{{ courseAttribute.grade }}</div>
+        </div>
+        <div>|</div>
+        <div class="flex space-x-2">
+          <div>开课学期</div>
+          <div>{{ courseAttribute.semester }}</div>
+        </div>
+        <div>|</div>
+        <div class="flex space-x-2">
+          <div>{{ courseAttribute.category }}</div>
         </div>
       </div>
       <div class="text-lg leading-10">
@@ -76,7 +101,7 @@ const courseReviews = computed(
     </div>
     <div class="flex-col space-y-5">
       <div
-        v-for="review in courseReviews"
+        v-for="review in getCourseReviews(0, 10, 'time')"
         :key="review.id"
         class="w-4/5 bg-gray-100 rounded-lg"
       >
