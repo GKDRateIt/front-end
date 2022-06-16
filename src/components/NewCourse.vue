@@ -4,7 +4,7 @@ import { NButton } from "naive-ui";
 </script>
 
 <template>
-  <div class="flex-col w-[60vw] mx-auto mt-10 space-y-10">
+  <div class="flex-col w-[70vw] mx-auto mt-10 space-y-10">
     <div class="text-4xl">新增课程</div>
     <div class="flex-col space-y-3">
       <named-input name="课程名称" />

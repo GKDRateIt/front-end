@@ -5,6 +5,7 @@ import LogIn from "./components/LogIn.vue";
 import CoursePage from "./components/CoursePage.vue";
 import SearchResult from "./components/SearchResult.vue";
 import NewCourse from "./components/NewCourse.vue";
+import NewReview from "./components/NewReview.vue";
 
 const routes = [
   { path: "/", component: HomePage },
@@ -12,6 +13,7 @@ const routes = [
   { path: "/course", component: CoursePage },
   { path: "/search", component: SearchResult },
   { path: "/new-course", component: NewCourse },
+  { path: "/new-review", component: NewReview },
 ];
 
 const router = createRouter({

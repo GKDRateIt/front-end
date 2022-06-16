@@ -9,4 +9,4 @@ interface CourseAttribute {
   semester: Semester;
   category: CourseCategory;
 }
-export { Semester, CourseCategory, CourseAttribute };
+export type { Semester, CourseCategory, CourseAttribute };

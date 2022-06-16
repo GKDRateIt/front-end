@@ -60,7 +60,7 @@ const getCourseReviews = (
 </script>
 
 <template>
-  <div class="flex-col w-[80vw] mt-[8vh] mx-auto space-y-8">
+  <div class="flex-col w-[70vw] mt-[8vh] mx-auto space-y-8">
     <div class="text-4xl">
       {{ courseAttribute.name }} ({{ $route.query.courseId }})
     </div>
