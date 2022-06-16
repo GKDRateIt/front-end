@@ -6,6 +6,8 @@ import CoursePage from "./components/CoursePage.vue";
 import SearchResult from "./components/SearchResult.vue";
 import NewCourse from "./components/NewCourse.vue";
 import NewReview from "./components/NewReview.vue";
+import AboutPage from "./components/AboutPage.vue";
+import FeedbackPage from "./components/FeedbackPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
@@ -14,6 +16,8 @@ const routes = [
   { path: "/search", component: SearchResult },
   { path: "/new-course", component: NewCourse },
   { path: "/new-review", component: NewReview },
+  { path: "/about", component: AboutPage },
+  { path: "/feedback", component: FeedbackPage },
 ];
 
 const router = createRouter({
