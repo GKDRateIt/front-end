@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { NButton } from "naive-ui";
 import { CourseAttribute } from "../common";
 
-const courseAttribute = computed((): CourseAttribute | undefined => {
+const courseAttribute = computed((): CourseAttribute => {
   return {
     id: "???",
     name: "某课程",
@@ -92,7 +92,7 @@ const getCourseReviews = (
     </div>
     <div class="flex-col space-y-5">
       <div
-        v-for="review in getCourseReviews(0, 10, 'time')"
+        v-for="review in getCourseReviews('time', 0, 10)"
         :key="review.id"
         class="w-4/5 bg-gray-100 rounded-lg"
       >
