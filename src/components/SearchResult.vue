@@ -50,7 +50,7 @@ const getResultEntries = (
     <div class="text-lg">"{{ $route.query.keywords }}" 的搜索结果：</div>
     <div
       v-for="resultEntry in getResultEntries(0, 10)"
-      :key="resultEntry.id"
+      :key="resultEntry.attr.id"
       class="bg-gray-100 rounded-lg"
     >
       <div class="flex space-x-2 text-lg">
