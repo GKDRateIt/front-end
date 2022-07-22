@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, computed, defineProps } from "vue";
+import { ref, Ref, computed } from "vue";
 import { NAutoComplete } from "naive-ui";
 
 const props = defineProps({
