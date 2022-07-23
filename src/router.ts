@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import HomePage from "./components/HomePage.vue";
-import LogIn from "./components/LogIn.vue";
+import LogIn from "./components/LogInPage.vue";
 import CoursePage from "./components/CoursePage.vue";
 import SearchResult from "./components/SearchResult.vue";
 import NewCourse from "./components/NewCourse.vue";

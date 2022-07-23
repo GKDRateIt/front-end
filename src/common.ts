@@ -33,7 +33,7 @@ interface ApiQuery {
   _action: "create" | "update" | "delete" | "read";
 }
 
-export interface UserQuery extends ApiQuery {
+export interface UserRegisterQuery extends ApiQuery {
   // _action: "create" | "update" | "delete" | "read";
   email: string;
   hashedPassword: string;
@@ -42,13 +42,18 @@ export interface UserQuery extends ApiQuery {
   group: string;
 }
 
+export interface UserLoginQuery {
+  email: string;
+  hashedPassword: string;
+}
+
 const apiPrefix =
   import.meta.env.MODE == "development" ? "http://localhost:8080" : "";
 
 export class UserApi {
   // Post [UserQuery] to `${apiPrefix}/api/user`
   public static async createUser(
-    reqBody: UserQuery
+    reqBody: UserRegisterQuery
   ): Promise<ApiResponse<String>> {
     const response = await fetch(`${apiPrefix}/api/user`, {
       method: "POST",
@@ -56,6 +61,22 @@ export class UserApi {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(reqBody),
+    });
+    return response.json();
+  }
+
+  // Login with [UserLoginQuery] from `${apiPrefix}/api/login` with basic http auth
+  public static async login(
+    query: UserLoginQuery
+  ): Promise<ApiResponse<String>> {
+    const response = await fetch(`${apiPrefix}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${btoa(
+          `${query.email}:${query.hashedPassword}`
+        )}`,
+      },
     });
     return response.json();
   }

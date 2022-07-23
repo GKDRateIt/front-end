@@ -15,7 +15,7 @@ const props = defineProps({
   },
 });
 
-const ensureType = (type: string): string => {
+const ensureType = (type: string): "text" | "password" => {
   if (type == "text" || type == "password") return type;
   else return "text";
 };

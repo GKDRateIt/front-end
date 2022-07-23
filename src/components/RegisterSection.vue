@@ -2,7 +2,7 @@
 import { NButton, useMessage } from "naive-ui";
 import NamedInput from "./NamedInput.vue";
 import { ref } from "vue";
-import { strHash, UserApi, UserQuery, ApiResponse } from "../common";
+import { strHash, UserApi, UserRegisterQuery, ApiResponse } from "../common";
 
 const nickname = ref("");
 const email = ref("");
@@ -32,7 +32,7 @@ const register = () => {
     return;
   }
 
-  const userQuery: UserQuery = {
+  const userQuery: UserRegisterQuery = {
     _action: "create",
     nickname: nickname.value,
     email: email.value,
@@ -59,27 +59,15 @@ const register = () => {
 </script>
 
 <template>
-  <div class="w-full h-fit flex justify-center mt-[13vh] space-x-10">
-    <div class="flex-col space-y-10 mt-12">
-      <named-input name="邮箱" />
-      <named-input name="密码" />
-      <div class="w-fit mx-auto">
-        <n-button size="large" class="text-xl"> 登录 </n-button>
-      </div>
-    </div>
-    <div class="w-[2px] h-[400px] bg-gray-300"></div>
-    <div class="flex-col space-y-5 mt-8">
-      <div class="text-lg">没有账号？注册一个！</div>
-      <named-input v-model:value="nickname" name="昵称" />
-      <named-input v-model:value="email" name="邮箱" />
-      <!-- <named-input name="验证邮箱" /> -->
-      <named-input v-model:value="password1" type="password" name="密码" />
-      <named-input v-model:value="password2" type="password" name="确认" />
-      <div class="w-fit mx-auto">
-        <n-button size="large" class="text-xl" @click="register">
-          注册
-        </n-button>
-      </div>
+  <div class="flex-col space-y-5 mt-8">
+    <div class="text-lg">没有账号？注册一个！</div>
+    <named-input v-model:value="nickname" name="昵称" />
+    <named-input v-model:value="email" name="邮箱" />
+    <!-- <named-input name="验证邮箱" /> -->
+    <named-input v-model:value="password1" type="password" name="密码" />
+    <named-input v-model:value="password2" type="password" name="确认" />
+    <div class="w-fit mx-auto">
+      <n-button size="large" class="text-xl" @click="register"> 注册 </n-button>
     </div>
   </div>
 </template>
