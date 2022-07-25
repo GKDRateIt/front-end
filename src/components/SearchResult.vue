@@ -19,7 +19,7 @@ const getResultEntries = (
         name: "计算机组成原理",
         id: "XXX",
         teacher: "ZK",
-        grade: 2.0,
+        credit: 2.0,
         semester: "春季学期",
         category: "专业必修课",
       },
@@ -31,7 +31,7 @@ const getResultEntries = (
         name: "原子物理",
         id: "YYY",
         teacher: "HHB",
-        grade: 3.0,
+        credit: 3.0,
         semester: "春季学期",
         category: "专业必修课",
       },
@@ -61,7 +61,7 @@ const getResultEntries = (
         <div>{{ resultEntry.attr.teacher }}</div>
         <div>|</div>
         <div>学分</div>
-        <div>{{ resultEntry.attr.grade }}</div>
+        <div>{{ resultEntry.attr.credit }}</div>
         <div>|</div>
         <div>开课学期</div>
         <div>{{ resultEntry.attr.semester }}</div>

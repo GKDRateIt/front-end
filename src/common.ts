@@ -1,16 +1,47 @@
-export type Semester = "春季学期" | "秋季学期" | "夏季学期";
-export type CourseCategory =
-  | "公共必修课"
-  | "公共选修课"
-  | "专业必修课"
-  | "专业选修课";
-export interface CourseAttribute {
-  id: string;
+// export type Semester = "春季学期" | "秋季学期" | "夏季学期";
+// export type CourseCategory =
+//   | "公共必修课"
+//   | "公共选修课"
+//   | "专业必修课"
+//   | "专业选修课";
+export interface CourseModel {
+  courseId: number;
+  code: string;
+  codeSeq: string | null;
   name: string;
-  teacher: string;
+  teacherId: number;
+  semester: string;
   credit: number;
-  semester: Semester;
-  category: CourseCategory;
+  degree: number;
+}
+
+export interface ReviewModel {
+  reviewId: number;
+  courseId: number;
+  userId: number;
+  createTime: string;
+  lastUpdateTime: string;
+  overallRecommendation: number;
+  quality: number;
+  difficulty: number;
+  workload: number;
+  commentText: string;
+  myGrade: string | null;
+  myMayjor: number | null;
+}
+
+export interface TeacherModel {
+  teacherId: number;
+  name: string;
+  email: string;
+}
+
+export interface UserModel {
+  userId: number;
+  email: string;
+  nickname: string;
+  startYear: string;
+  group: string;
 }
 
 export interface ApiResponse<T> {
@@ -80,4 +111,113 @@ export class UserApi {
     });
     return response.json();
   }
+
+  // Post id to `${apiPrefix}/api/user`
+  public static async getUser(userId: number): Promise<UserModel | null> {
+    const responseBody = await fetch(`${apiPrefix}/api/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ _action: "read", userId: userId.toString() }),
+    });
+    const response = (await responseBody.json()) as ApiResponse<UserModel[]>;
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    if (response.data && response.data.length > 0) {
+      return response.data[0];
+    } else {
+      return null;
+    }
+  }
 }
+
+export class CourseApi {
+  // post to `${apiPrefix}/api/course`.
+  public static async getCourses(
+    courseId: number
+  ): Promise<CourseModel | null> {
+    const responseBody = await fetch(`${apiPrefix}/api/course`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ _action: "read", courseId: courseId.toString() }),
+    });
+    const response = (await responseBody.json()) as ApiResponse<CourseModel[]>;
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    if (response.data && response.data.length > 0) {
+      return response.data[0];
+    } else {
+      return null;
+    }
+  }
+}
+
+export class ReviewApi {
+  // post to `${apiPrefix}/api/review`.
+  public static async getReviewsByCourseId(
+    courseId: number
+  ): Promise<ReviewModel[]> {
+    const responseBody = await fetch(`${apiPrefix}/api/review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ _action: "read", courseId: courseId.toString() }),
+    });
+    const response = (await responseBody.json()) as ApiResponse<ReviewModel[]>;
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    if (response.data) {
+      return response.data;
+    } else {
+      return [];
+    }
+  }
+}
+
+export class TeacherApi {
+  // post to `${apiPrefix}/api/teacher`.
+  public static async getTeacher(
+    teacherId: number
+  ): Promise<TeacherModel | null> {
+    const responseBody = await fetch(`${apiPrefix}/api/teacher`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _action: "read",
+        teacherId: teacherId.toString(),
+      }),
+    });
+    const response = (await responseBody.json()) as ApiResponse<TeacherModel[]>;
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    if (response.data && response.data.length > 0) {
+      return response.data[0];
+    } else {
+      return null;
+    }
+  }
+}
+
+export const decodeJwt = (token: string): any => {
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  return JSON.parse(window.atob(base64));
+};
+
+export const isLoggedInRaw = (): boolean => {
+  const jwt = localStorage.getItem("jwt");
+  if (jwt) {
+    return true;
+  }
+  return false;
+};

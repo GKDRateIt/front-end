@@ -25,10 +25,10 @@ const register = () => {
     return;
   }
 
-  // Check email postfix is '@ucas.ac.cn'
-  if (!email.value.endsWith("@ucas.ac.cn")) {
-    console.log("Email must be @ucas.ac.cn");
-    message.error("Email must be @ucas.ac.cn");
+  // Check email postfix is '@mails.ucas.ac.cn'
+  if (!email.value.endsWith("@mails.ucas.ac.cn")) {
+    console.log("Email must be @mails.ucas.ac.cn");
+    message.error("Email must be @mails.ucas.ac.cn");
     return;
   }
 

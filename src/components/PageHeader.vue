@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { inject } from "vue";
 import { NButton } from "naive-ui";
+import UserProfile from "./UserProfile.vue";
+
+const { isLoggedIn, updateIsLoggedIn } = inject("isLoggedIn");
 </script>
 
 <template>
@@ -20,7 +24,10 @@ import { NButton } from "naive-ui";
     </div>
     <!-- Right part -->
     <div class="w-fit flex justify-end space-x-6 mr-10 my-3">
-      <router-link to="/log-in">
+      <div v-if="isLoggedIn">
+        <user-profile />
+      </div>
+      <router-link v-else to="/log-in">
         <div class="bg-white h-fit w-fit text-center">
           <n-button>登录/注册</n-button>
         </div>

@@ -8,7 +8,7 @@ const courseAttribute = computed((): CourseAttribute => {
     id: "???",
     name: "某课程",
     teacher: "X",
-    grade: 2.0,
+    credit: 2.0,
     semester: "春季学期",
     category: "专业必修课",
   };
@@ -50,7 +50,7 @@ const semesterSelectOptions = [
         <div>|</div>
         <div class="flex space-x-2">
           <div>学分</div>
-          <div>{{ courseAttribute.grade }}</div>
+          <div>{{ courseAttribute.credit }}</div>
         </div>
         <div>|</div>
         <div class="flex space-x-2">
