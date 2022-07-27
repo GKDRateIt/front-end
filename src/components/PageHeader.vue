@@ -3,7 +3,7 @@ import { inject } from "vue";
 import { NButton } from "naive-ui";
 import UserProfile from "./UserProfile.vue";
 
-const { isLoggedIn, updateIsLoggedIn } = inject("isLoggedIn");
+const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };
 </script>
 
 <template>
@@ -15,12 +15,16 @@ const { isLoggedIn, updateIsLoggedIn } = inject("isLoggedIn");
           <n-button>主页</n-button>
         </div>
       </router-link>
-      <div class="bg-white h-fit w-fit text-center">
-        <n-button>最近点评</n-button>
-      </div>
-      <div class="bg-white h-fit w-fit text-center">
-        <n-button>新增课程</n-button>
-      </div>
+      <router-link to="/recent-review">
+        <div class="bg-white h-fit w-fit text-center">
+          <n-button>最近点评</n-button>
+        </div>
+      </router-link>
+      <router-link to="/new-course">
+        <div class="bg-white h-fit w-fit text-center">
+          <n-button>新增课程</n-button>
+        </div>
+      </router-link>
     </div>
     <!-- Right part -->
     <div class="w-fit flex justify-end space-x-6 mr-10 my-3">

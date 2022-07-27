@@ -5,7 +5,8 @@ import NamedInput from "./NamedInput.vue";
 import { useRouter } from "vue-router";
 import { UserLoginQuery, UserApi, strHash, ApiResponse } from "../common";
 
-const { isLoggedIn, updateIsLoggedIn } = inject("isLoggedIn");
+const { updateIsLoggedIn } = inject("isLoggedIn") as { updateIsLoggedIn: any };
+
 const router = useRouter();
 
 const email = ref("");

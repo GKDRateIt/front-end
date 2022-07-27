@@ -33,7 +33,6 @@ const register = () => {
   }
 
   const userQuery: UserRegisterQuery = {
-    _action: "create",
     nickname: nickname.value,
     email: email.value,
     hashedPassword: strHash(password1.value),

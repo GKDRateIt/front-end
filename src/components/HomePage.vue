@@ -1,6 +1,17 @@
 <script setup lang="ts">
-import SearchBox from "./SearchBox.vue";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { NButton } from "naive-ui";
+import SearchBox from "./SearchBox.vue";
+
+const router = useRouter();
+
+const value = ref("");
+
+const submitSearch = () => {
+  console.log(`Searching: ${value.value}`);
+  router.push("/search");
+};
 </script>
 
 <template>
@@ -10,10 +21,10 @@ import { NButton } from "naive-ui";
       <div class="text-6xl h-fit mt-auto mb-0">@UCAS</div>
     </div>
     <div class="w-fit m-auto">
-      <search-box />
+      <search-box v-model:value="value" />
     </div>
     <div class="flex m-auto w-fit space-x-5">
-      <n-button> 开始检索 </n-button>
+      <n-button @click="submitSearch"> 开始检索 </n-button>
       <n-button> 试试手气 </n-button>
     </div>
   </div>

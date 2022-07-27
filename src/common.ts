@@ -1,9 +1,3 @@
-// export type Semester = "春季学期" | "秋季学期" | "夏季学期";
-// export type CourseCategory =
-//   | "公共必修课"
-//   | "公共选修课"
-//   | "专业必修课"
-//   | "专业选修课";
 export interface CourseModel {
   courseId: number;
   code: string;
@@ -60,12 +54,11 @@ export function strHash(str: string): string {
   return hash.toString();
 }
 
-interface ApiQuery {
-  _action: "create" | "update" | "delete" | "read";
-}
+// interface ApiQuery {
+//   _action: "create" | "update" | "delete" | "read";
+// }
 
-export interface UserRegisterQuery extends ApiQuery {
-  // _action: "create" | "update" | "delete" | "read";
+export interface UserRegisterQuery {
   email: string;
   hashedPassword: string;
   nickname: string;
@@ -76,6 +69,18 @@ export interface UserRegisterQuery extends ApiQuery {
 export interface UserLoginQuery {
   email: string;
   hashedPassword: string;
+}
+
+export interface ReviewCreateQuery {
+  courseId: string;
+  email: string;
+  createTime: string;
+  lastUpdateTime: string;
+  overallRecommendation: string;
+  quality: string;
+  difficulty: string;
+  workload: string;
+  commentText: string;
 }
 
 const apiPrefix =
@@ -91,7 +96,11 @@ export class UserApi {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(reqBody),
+      body: JSON.stringify({
+        _action: "create",
+        email: reqBody.email,
+        hashedPassword: reqBody.hashedPassword,
+      }),
     });
     return response.json();
   }
@@ -113,13 +122,17 @@ export class UserApi {
   }
 
   // Post id to `${apiPrefix}/api/user`
-  public static async getUser(userId: number): Promise<UserModel | null> {
+  public static async getUserById(userId: number): Promise<UserModel | null> {
+    const body = {
+      _action: "read",
+      userId: userId.toString(),
+    };
     const responseBody = await fetch(`${apiPrefix}/api/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ _action: "read", userId: userId.toString() }),
+      body: JSON.stringify(body),
     });
     const response = (await responseBody.json()) as ApiResponse<UserModel[]>;
     if (import.meta.env.MODE == "development") {
@@ -135,9 +148,7 @@ export class UserApi {
 
 export class CourseApi {
   // post to `${apiPrefix}/api/course`.
-  public static async getCourses(
-    courseId: number
-  ): Promise<CourseModel | null> {
+  public static async getCourse(courseId: number): Promise<CourseModel | null> {
     const responseBody = await fetch(`${apiPrefix}/api/course`, {
       method: "POST",
       headers: {
@@ -179,6 +190,39 @@ export class ReviewApi {
       return [];
     }
   }
+
+  // post to `${apiPrefix}/api/review` to create new reivew.
+  public static async createReview(
+    query: ReviewCreateQuery
+  ): Promise<ApiResponse<string>> {
+    const body = {
+      _action: "create",
+      courseId: query.courseId.toString(),
+      email: query.email.toString(),
+      createTime: Date.parse(query.createTime.toString()).toString(),
+      lastUpdateTime: Date.parse(query.lastUpdateTime.toString()).toString(),
+      overallRecommendation: query.overallRecommendation.toString(),
+      quality: query.quality.toString(),
+      difficulty: query.difficulty.toString(),
+      workload: query.workload.toString(),
+      commentText: query.commentText.toString(),
+    };
+    if (import.meta.env.MODE == "development") {
+      console.log(body);
+    }
+    const responseBody = await fetch(`${apiPrefix}/api/review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const response = (await responseBody.json()) as ApiResponse<string>;
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    return response;
+  }
 }
 
 export class TeacherApi {
@@ -208,7 +252,10 @@ export class TeacherApi {
   }
 }
 
-export const decodeJwt = (token: string): any => {
+export const decodeJwt = (token: string | null): any | null => {
+  if (token == null) {
+    return null;
+  }
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   return JSON.parse(window.atob(base64));
@@ -220,4 +267,12 @@ export const isLoggedInRaw = (): boolean => {
     return true;
   }
   return false;
+};
+
+export const getLoggedInUserEmail = (): string | null => {
+  const jwt = decodeJwt(localStorage.getItem("jwt"));
+  if (jwt == null) {
+    return null;
+  }
+  return jwt["email"];
 };

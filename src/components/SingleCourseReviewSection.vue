@@ -1,19 +1,29 @@
 <script setup lang="ts">
 import { NButton } from "naive-ui";
 import { useRoute } from "vue-router";
-import { ReviewApi, UserApi } from "../common";
+import { ReviewApi, UserApi, UserModel } from "../common";
 
 const route = useRoute();
 
 const courseId = Number(route.params.courseId);
 
 const reviews = await ReviewApi.getReviewsByCourseId(courseId);
-const postUsers = [];
+const postUsers: Array<UserModel> = [];
 
 await (async () => {
   for (const review of reviews) {
-    const user = await UserApi.getUser(review.userId);
-    postUsers.push(user);
+    const user = await UserApi.getUserById(review.userId);
+    if (!user) {
+      postUsers.push({
+        userId: 0,
+        email: "",
+        nickname: "???",
+        startYear: "2014",
+        group: "0",
+      });
+    } else {
+      postUsers.push(user);
+    }
   }
 })();
 </script>
