@@ -25,7 +25,25 @@ enum VerificationCodeStatus {
 const verificationCodeStatus = ref(VerificationCodeStatus.Unsent);
 
 const sendCode = () => {
-  verificationCodeStatus.value = VerificationCodeStatus.JustSent;
+  if (
+    !email.value.endsWith("@mails.ucas.ac.cn") ||
+    email.value.startsWith("@")
+  ) {
+    message.error("请填写正确的 @mails.ucas.ac.cn 邮箱");
+  }
+  UserApi.createVerification(email.value)
+    .then((res: ApiResponse<String>) => {
+      if (res.status != "SUCCESS") {
+        console.log(res.detail);
+        message.error("发送验证码失败");
+      } else {
+        verificationCodeStatus.value = VerificationCodeStatus.JustSent;
+      }
+    })
+    .catch((err: any) => {
+      console.log(err);
+      message.error("发送验证码失败");
+    });
 };
 
 const resendLimit = 60; // in sec

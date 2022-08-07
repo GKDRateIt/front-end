@@ -144,6 +144,28 @@ export class UserApi {
       return null;
     }
   }
+
+  // Post email to `${apiPrefix}/api/email-verification`
+  public static async createVerification(
+    email: string
+  ): Promise<ApiResponse<String>> {
+    const body = {
+      _action: "create",
+      email: email,
+    };
+    const responseBody = await fetch(`${apiPrefix}/api/email-verification`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const response = (await responseBody.json()) as ApiResponse<String>;
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    return response;
+  }
 }
 
 export class CourseApi {
