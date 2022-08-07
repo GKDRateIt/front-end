@@ -8,7 +8,6 @@ import {
   ReviewCreateQuery,
   getLoggedInUserEmail,
 } from "../common";
-import NamedInput from "./NamedInput.vue";
 
 const route = useRoute();
 const message = useMessage();

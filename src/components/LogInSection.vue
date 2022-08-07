@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, inject } from "vue";
-import { NButton, useMessage } from "naive-ui";
-import NamedInput from "./NamedInput.vue";
+import { NButton, NInput, useMessage } from "naive-ui";
 import { useRouter } from "vue-router";
 import { UserLoginQuery, UserApi, strHash, ApiResponse } from "../common";
 
@@ -50,9 +49,22 @@ const logIn = () => {
 </script>
 
 <template>
-  <named-input v-model:value="email" name="邮箱" />
-  <named-input v-model:value="password" type="password" name="密码" />
-  <div class="w-fit mx-auto">
-    <n-button size="large" class="text-xl" @click="logIn"> 登录 </n-button>
+  <div class="w-1/3 max-w-md flex-col space-y-5 mt-8">
+    <div class="text-lg">登录现有账号</div>
+    <div class="w-full flex-col space-y-5">
+      <div class="flex w-full">
+        <div class="w-1/5 text-left text-xl">邮箱</div>
+        <div class="w-4/5"><n-input v-model:value="email" /></div>
+      </div>
+      <div class="flex w-full">
+        <div class="w-1/5 text-left text-xl">密码</div>
+        <div class="w-4/5">
+          <n-input v-model:value="password" type="password" />
+        </div>
+      </div>
+    </div>
+    <div class="w-fit mx-auto">
+      <n-button size="large" class="text-xl" @click="logIn"> 登录 </n-button>
+    </div>
   </div>
 </template>

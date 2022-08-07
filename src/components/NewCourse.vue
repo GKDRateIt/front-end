@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NamedInput from "./NamedInput.vue";
 import { NButton } from "naive-ui";
 </script>
 

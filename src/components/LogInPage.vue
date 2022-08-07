@@ -4,11 +4,9 @@ import RegisterSection from "./RegisterSection.vue";
 </script>
 
 <template>
-  <div class="w-full h-fit flex justify-center mt-[13vh] space-x-10">
-    <div class="flex-col space-y-10 mt-12">
-      <log-in-section />
-    </div>
-    <div class="w-[2px] h-[400px] bg-gray-300"></div>
+  <div class="w-full h-fit flex justify-center mt-[13vh] space-x-14">
+    <log-in-section />
+    <div class="w-[3px] h-[500px] bg-gray-300"></div>
     <register-section />
   </div>
 </template>
