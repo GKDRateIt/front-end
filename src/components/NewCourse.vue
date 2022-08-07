@@ -6,12 +6,12 @@ import { NButton } from "naive-ui";
   <div class="flex-col w-[70vw] mx-auto mt-10 space-y-10">
     <div class="text-4xl">新增课程</div>
     <div class="flex-col space-y-3">
-      <named-input name="课程名称" />
+      <!-- <named-input name="课程名称" />
       <named-input name="课程号" />
       <named-input name="主讲教师" />
       <named-input name="开课学期" />
       <named-input name="课程类别" />
-      <named-input name="学分" />
+      <named-input name="学分" /> -->
     </div>
     <div class="flex justify-items-end">
       <div class="w-fit ml-auto mr-10">

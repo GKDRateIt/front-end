@@ -18,7 +18,7 @@ const courseModel = await CourseApi.getCourse(courseId);
 const userEmail = getLoggedInUserEmail();
 
 const selectedSemester = ref(Number(new Date().getFullYear()).toString());
-const commnetText = ref("");
+const commentText = ref("");
 const overallRecommendation = ref("");
 const quality = ref("");
 const difficulty = ref("");
@@ -52,7 +52,7 @@ const submitReview = () => {
   console.log(`quality: ${quality.value}`);
   console.log(`difficulty: ${difficulty.value}`);
   console.log(`workload: ${workload.value}`);
-  console.log(`commnetText: ${commnetText.value}`);
+  console.log(`commentText: ${commentText.value}`);
 
   const _overallRecommendation = Number(overallRecommendation.value);
   const _quality = Number(quality.value);
@@ -77,7 +77,7 @@ const submitReview = () => {
     quality: quality.value,
     difficulty: difficulty.value,
     workload: workload.value,
-    commentText: commnetText.value,
+    commentText: commentText.value,
   };
   ReviewApi.createReview(query)
     .then((result) => {
@@ -132,16 +132,16 @@ const submitReview = () => {
           :options="semesterSelectOptions"
         />
       </div>
-      <named-input
+      <!-- <named-input
         v-model:value="overallRecommendation"
         name="总体评价"
       ></named-input>
       <named-input v-model:value="quality" name="质量"></named-input>
       <named-input v-model:value="difficulty" name="难度"></named-input>
-      <named-input v-model:value="workload" name="工作量"></named-input>
+      <named-input v-model:value="workload" name="工作量"></named-input> -->
       <div class="flex space-x-10">
         <div class="min-w-[8%]">点评内容</div>
-        <n-input v-model:value="commnetText" class="h-64" />
+        <n-input v-model:value="commentText" class="h-64" />
       </div>
       <div>
         <div class="w-fit ml-auto mr-24">
