@@ -10,7 +10,7 @@ const value = ref("");
 
 const submitSearch = () => {
   console.log(`Searching: ${value.value}`);
-  router.push("/search");
+  router.push(`/search?keyword=${btoa(value.value)}`);
 };
 </script>
 
@@ -20,12 +20,11 @@ const submitSearch = () => {
       <div class="text-7xl h-fit mt-auto mb-0">RateIt</div>
       <div class="text-6xl h-fit mt-auto mb-0">@UCAS</div>
     </div>
-    <div class="w-fit m-auto">
-      <search-box v-model:value="value" />
-    </div>
-    <div class="flex m-auto w-fit space-x-5">
-      <n-button @click="submitSearch"> 开始检索 </n-button>
-      <n-button> 试试手气 </n-button>
+    <div class="w-full">
+      <div class="w-1/2 max-w-fit min-w-fit flex m-auto space-x-5">
+        <search-box v-model:value="value" class="min-w-[300px] max-w-2xl" />
+        <n-button size="large" @click="submitSearch"> 搜索 </n-button>
+      </div>
     </div>
   </div>
 </template>
