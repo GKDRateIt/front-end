@@ -68,18 +68,6 @@ if (import.meta.env.DEV) {
   console.log(course);
 }
 
-const getFullCourseCode = (course: CourseModel) => {
-  if (course === null) {
-    return "";
-  }
-  var ans = course.code;
-  if (course.codeSeq) {
-    ans += "-";
-    ans += course.codeSeq;
-  }
-  return ans;
-};
-
 const newReview = () => {
   router.push(`/new-review?courseId=${course.value?.courseId}`);
 };
@@ -88,7 +76,9 @@ const newReview = () => {
 <template>
   <div v-if="course" class="flex-col space-y-5 m-10 mx-auto w-2/3">
     <div class="text-4xl">
-      {{ course ? course.name : "" }} ({{ getFullCourseCode(course) }})
+      {{ course ? course.name : "" }} ({{
+        CourseApi.getFullCourseCode(course)
+      }})
     </div>
     <div class="flex space-x-5">
       <div class="text-lg flex space-x-2 leading-10 bg-gray-100 rounded-md">

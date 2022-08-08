@@ -182,9 +182,7 @@ export class UserApi {
 
 export class CourseApi {
   // post to `${apiPrefix}/api/course`.
-  public static async getCourse(
-    req: CourseReadQuery
-  ): Promise<CourseModel | null> {
+  public static async getCourses(req: CourseReadQuery): Promise<CourseModel[]> {
     const mp = new Map();
     mp.set("_action", "read");
     if (req.courseId) {
@@ -210,11 +208,38 @@ export class CourseApi {
     if (import.meta.env.MODE == "development") {
       console.log(response);
     }
-    if (response.data && response.data.length > 0) {
-      return response.data[0];
+    if (response.data) {
+      return response.data;
+    } else {
+      return [];
+    }
+  }
+
+  // post to `${apiPrefix}/api/course`.
+  public static async getCourse(
+    req: CourseReadQuery
+  ): Promise<CourseModel | null> {
+    const response = await this.getCourses(req);
+    if (import.meta.env.MODE == "development") {
+      console.log(response);
+    }
+    if (response.length > 0) {
+      return response[0];
     } else {
       return null;
     }
+  }
+
+  public static getFullCourseCode(course: CourseModel) {
+    if (course === null) {
+      return "";
+    }
+    var ans = course.code;
+    if (course.codeSeq) {
+      ans += "-";
+      ans += course.codeSeq;
+    }
+    return ans;
   }
 }
 
@@ -299,6 +324,26 @@ export class TeacherApi {
     } else {
       return null;
     }
+  }
+}
+
+export class SearchApi {
+  public static async search(
+    keyword: string
+  ): Promise<[CourseModel[], TeacherModel[]]> {
+    const courses: CourseModel[] = [];
+    const teachers: TeacherModel[] = [];
+
+    const courseRes = await CourseApi.getCourses({
+      courseId: null,
+      code: keyword,
+      seq: null,
+      name: keyword,
+    });
+
+    courseRes.forEach((course) => courses.push(course));
+
+    return [courses, teachers];
   }
 }
 
