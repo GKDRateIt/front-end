@@ -84,6 +84,13 @@ export interface ReviewCreateQuery {
   commentText: string;
 }
 
+export interface CourseReadQuery {
+  courseId: string | null;
+  code: string | null;
+  seq: string | null;
+  name: string | null;
+}
+
 const apiPrefix =
   import.meta.env.MODE == "development" ? "http://localhost:8080" : "";
 
@@ -175,13 +182,29 @@ export class UserApi {
 
 export class CourseApi {
   // post to `${apiPrefix}/api/course`.
-  public static async getCourse(courseId: number): Promise<CourseModel | null> {
+  public static async getCourse(
+    req: CourseReadQuery
+  ): Promise<CourseModel | null> {
+    const mp = new Map();
+    mp.set("_action", "read");
+    if (req.courseId) {
+      mp.set("courseId", req.courseId);
+    }
+    if (req.code) {
+      mp.set("code", req.code);
+    }
+    if (req.seq) {
+      mp.set("seq", req.seq);
+    }
+    if (req.name) {
+      mp.set("name", req.name);
+    }
     const responseBody = await fetch(`${apiPrefix}/api/course`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ _action: "read", courseId: courseId.toString() }),
+      body: JSON.stringify(Object.fromEntries(mp)),
     });
     const response = (await responseBody.json()) as ApiResponse<CourseModel[]>;
     if (import.meta.env.MODE == "development") {

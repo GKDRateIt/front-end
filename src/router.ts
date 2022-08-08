@@ -14,9 +14,8 @@ import FeedbackPage from "./components/FeedbackPage.vue";
 const routes = [
   { path: "/", component: HomePage },
   { path: "/log-in", component: LogIn },
-  { path: "/course", component: CoursesPage },
   { path: "/courses", component: CoursesPage },
-  { path: "/course/:courseId", component: SingleCoursePage },
+  { path: "/course", component: SingleCoursePage },
   { path: "/recent-review", component: RecentReviewPage },
   { path: "/search", component: SearchResult },
   { path: "/new-course", component: NewCourse },
