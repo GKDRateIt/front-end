@@ -70,10 +70,12 @@ watch(
 );
 
 const register = () => {
-  console.log(`nickname: ${nickname.value}`);
-  console.log(`email: ${email.value}`);
-  console.log(`hashed password1: ${strHash(password1.value)}`);
-  console.log(`password2: ${strHash(password1.value)}`);
+  if (import.meta.env.DEV) {
+    console.log(`nickname: ${nickname.value}`);
+    console.log(`email: ${email.value}`);
+    console.log(`hashed password1: ${strHash(password1.value)}`);
+    console.log(`password2: ${strHash(password1.value)}`);
+  }
 
   // Check password match
   if (password1.value !== password2.value) {
@@ -91,6 +93,7 @@ const register = () => {
 
   const userQuery: UserRegisterQuery = {
     nickname: nickname.value,
+    verificationCode: emailVerificationCode.value,
     email: email.value,
     hashedPassword: strHash(password1.value),
     startYear: startYear.value,
@@ -104,7 +107,7 @@ const register = () => {
         message.success("注册成功");
       } else {
         console.log(res.detail);
-        message.error("注册失败");
+        message.error(`注册失败: ${res.detail}`);
       }
     })
     .catch((err: any) => {

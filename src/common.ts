@@ -60,6 +60,7 @@ export function strHash(str: string): string {
 
 export interface UserRegisterQuery {
   email: string;
+  verificationCode: string;
   hashedPassword: string;
   nickname: string;
   startYear: string;
@@ -100,6 +101,10 @@ export class UserApi {
         _action: "create",
         email: reqBody.email,
         hashedPassword: reqBody.hashedPassword,
+        nickname: reqBody.nickname,
+        startYear: reqBody.startYear,
+        verificationCode: reqBody.verificationCode,
+        group: reqBody.group,
       }),
     });
     return response.json();
