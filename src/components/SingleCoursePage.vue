@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { NButton } from "naive-ui";
 import {
   CourseApi,
@@ -13,6 +13,7 @@ import {
   ReviewApi,
 } from "../common";
 
+const router = useRouter();
 const route = useRoute();
 
 const courseCode = String(route.query.code);
@@ -78,6 +79,10 @@ const getFullCourseCode = (course: CourseModel) => {
   }
   return ans;
 };
+
+const newReview = () => {
+  router.push(`/new-review?courseId=${course.value?.courseId}`);
+};
 </script>
 
 <template>
@@ -138,7 +143,7 @@ const getFullCourseCode = (course: CourseModel) => {
     <div class="text-lg">
       <span>我也要评价！</span>
       <span>立刻</span>
-      <span class="ml-2">
+      <span class="ml-2" @click="newReview">
         <n-button> 新增点评 </n-button>
       </span>
     </div>
