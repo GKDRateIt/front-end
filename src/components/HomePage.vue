@@ -9,8 +9,12 @@ const router = useRouter();
 const value = ref("");
 
 const submitSearch = () => {
-  console.log(`Searching: ${value.value}`);
-  router.push(`/search?keyword=${btoa(value.value)}`);
+  if (import.meta.env.DEV) {
+    console.log(`Searching: ${value.value}`);
+  }
+  if (value.value.length > 0) {
+    router.push(`/search?keyword=${btoa(value.value)}`);
+  }
 };
 </script>
 
@@ -22,7 +26,11 @@ const submitSearch = () => {
     </div>
     <div class="w-full">
       <div class="w-1/2 max-w-fit min-w-fit flex m-auto space-x-5">
-        <search-box v-model:value="value" class="min-w-[300px] max-w-2xl" />
+        <search-box
+          v-model:value="value"
+          class="min-w-[300px] max-w-2xl"
+          @keypress.enter="submitSearch"
+        />
         <n-button size="large" @click="submitSearch"> 搜索 </n-button>
       </div>
     </div>

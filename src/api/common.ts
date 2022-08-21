@@ -6,3 +6,5 @@ export interface ApiResponse<T> {
 
 export const apiPrefix =
   import.meta.env.MODE == "development" ? "http://localhost:8080" : "";
+
+export const emailPostfix = "@ucas.mails.ac.cn";

@@ -23,7 +23,7 @@ const teacher: Ref<TeacherModel | null> = ref(null);
 const course: Ref<CourseModel | null> = ref(null);
 
 const reviews: Ref<Array<ReviewModel>> = ref([]);
-const postUsers: Ref<Array<UserModel>> = ref([]);
+const postUsers: Ref<Map<number, UserModel>> = ref(new Map());
 
 CourseApi.getCourse({
   courseId: null,
@@ -40,19 +40,13 @@ CourseApi.getCourse({
     ReviewApi.getReviewsByCourseId(courseRes.courseId).then((reviewRes) => {
       reviews.value = reviewRes;
       for (const review of reviewRes) {
-        UserApi.getUserById(review.userId).then((user) => {
-          if (user) {
-            postUsers.value.push(user);
-          } else {
-            postUsers.value.push({
-              userId: 0,
-              email: "???",
-              nickname: "???",
-              startYear: "???",
-              group: "???",
-            });
-          }
-        });
+        if (postUsers.value.get(review.userId) == null) {
+          UserApi.getUserById(review.userId).then((user) => {
+            if (user) {
+              postUsers.value.set(user.userId, user);
+            }
+          });
+        }
       }
     });
   }
@@ -121,7 +115,7 @@ const newReview = () => {
         <div class="indent-8 text-lg">
           {{ review.commentText }}
         </div>
-        <div>来自用户 @{{ postUsers[index].nickname }}</div>
+        <div>来自用户 @{{ postUsers.get(review.userId)?.nickname }}</div>
       </div>
     </div>
     <div class="text-lg">

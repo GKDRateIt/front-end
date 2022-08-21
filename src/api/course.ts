@@ -16,6 +16,7 @@ export interface CourseReadQuery {
   code: string | null;
   seq: string | null;
   name: string | null;
+  teacherName: string | null;
 }
 
 export class CourseApi {
@@ -34,6 +35,9 @@ export class CourseApi {
     }
     if (req.name) {
       mp.set("name", req.name);
+    }
+    if (req.teacherName) {
+      mp.set("teacherName", req.teacherName);
     }
     const responseBody = await fetch(`${apiPrefix}/api/course`, {
       method: "POST",
