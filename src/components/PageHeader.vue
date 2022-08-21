@@ -15,11 +15,11 @@ const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };
           <n-button>主页</n-button>
         </div>
       </router-link>
-      <router-link to="/recent-review">
+      <!-- <router-link to="/recent-review">
         <div class="bg-white h-fit w-fit text-center">
           <n-button>最近点评</n-button>
         </div>
-      </router-link>
+      </router-link> -->
       <router-link to="/new-course">
         <div class="bg-white h-fit w-fit text-center">
           <n-button>新增课程</n-button>
