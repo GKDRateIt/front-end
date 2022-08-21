@@ -26,14 +26,12 @@ const reviews: Ref<Array<ReviewModel>> = ref([]);
 const postUsers: Ref<Map<number, UserModel>> = ref(new Map());
 
 CourseApi.getCourse({
-  courseId: null,
   code: courseCode,
   seq: courseSeq,
-  name: null,
 }).then((courseRes) => {
   course.value = courseRes;
   if (courseRes) {
-    TeacherApi.getTeacher(courseRes.teacherId).then((teacherRes) => {
+    TeacherApi.getTeacherById(courseRes.teacherId).then((teacherRes) => {
       teacher.value = teacherRes;
     });
 

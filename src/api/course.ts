@@ -11,12 +11,12 @@ export interface CourseModel {
   degree: number;
 }
 
-export interface CourseReadQuery {
-  courseId: string | null;
-  code: string | null;
-  seq: string | null;
-  name: string | null;
-  teacherName: string | null;
+export class CourseReadQuery {
+  courseId?: string | null = null;
+  code?: string | null = null;
+  seq?: string | null = null;
+  name?: string | null = null;
+  teacherName?: string | null = null;
 }
 
 export class CourseApi {

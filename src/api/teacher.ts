@@ -6,10 +6,10 @@ export interface TeacherModel {
   email: string;
 }
 
-export interface TeacherReadQuery {
-  teacherId: number | null;
-  name: string | null;
-  email: string | null;
+export class TeacherReadQuery {
+  teacherId?: number | null = null;
+  name?: string | null = null;
+  email?: string | null = null;
 }
 
 export class TeacherApi {
