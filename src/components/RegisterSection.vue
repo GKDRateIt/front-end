@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { NButton, NInput, useMessage } from "naive-ui";
 import { ref, watch } from "vue";
-import { strHash, UserApi, UserRegisterQuery, ApiResponse } from "../common";
+import { strHash } from "../util";
+import { ApiResponse } from "../api/common";
+import { UserApi, UserRegisterQuery } from "../api/user";
 
 const nickname = ref("");
 const email = ref("");

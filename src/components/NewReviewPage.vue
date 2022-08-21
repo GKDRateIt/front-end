@@ -2,13 +2,9 @@
 import { ref, Ref, defineComponent, h } from "vue";
 import { useRoute } from "vue-router";
 import { NButton, NSelect, NInput, NRate, useMessage } from "naive-ui";
-import {
-  CourseApi,
-  ReviewApi,
-  ReviewCreateQuery,
-  getLoggedInUserEmail,
-  CourseModel,
-} from "../common";
+import { CourseApi, CourseModel } from "../api/course";
+import { ReviewApi, ReviewCreateQuery } from "../api/review";
+import { UserApi } from "../api/user";
 
 const route = useRoute();
 const message = useMessage();
@@ -26,7 +22,7 @@ CourseApi.getCourse({
   course.value = courseRes;
 });
 
-const userEmail = getLoggedInUserEmail();
+const userEmail = UserApi.getLoggedInUserEmail();
 
 const selectedSemester = ref(Number(new Date().getFullYear()).toString());
 const commentText = ref("");

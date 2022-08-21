@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import { useRoute } from "vue-router";
-import {
-  CourseModel,
-  TeacherModel,
-  CourseApi,
-  SearchApi,
-  TeacherApi,
-} from "../common";
+import { CourseApi, CourseModel } from "../api/course";
+import { SearchApi } from "../api/search";
+import { TeacherApi, TeacherModel } from "../api/teacher";
 
 const route = useRoute();
 

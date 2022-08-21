@@ -2,16 +2,10 @@
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { NButton } from "naive-ui";
-import {
-  CourseApi,
-  CourseModel,
-  ReviewModel,
-  TeacherApi,
-  TeacherModel,
-  UserModel,
-  UserApi,
-  ReviewApi,
-} from "../common";
+import { TeacherApi, TeacherModel } from "../api/teacher";
+import { CourseApi, CourseModel } from "../api/course";
+import { ReviewApi, ReviewModel } from "../api/review";
+import { UserApi, UserModel } from "../api/user";
 
 const router = useRouter();
 const route = useRoute();

@@ -2,9 +2,9 @@ import { createApp, ref } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import "./index.css";
-import { isLoggedInRaw } from "./common";
+import { UserApi } from "./api/user";
 
-const isLoggedIn = ref(isLoggedInRaw());
+const isLoggedIn = ref(UserApi.isLoggedIn());
 const updateIsLoggedIn = (value: boolean) => {
   isLoggedIn.value = value;
 };
