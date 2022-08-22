@@ -8,7 +8,9 @@ import { TeacherApi, TeacherModel } from "../api/teacher";
 const router = useRouter();
 const route = useRoute();
 
-const keyword = route.query.keyword ? atob(String(route.query.keyword)) : null;
+const keyword = route.query.keyword
+  ? decodeURIComponent(String(route.query.keyword))
+  : null;
 
 const courseList: Ref<Array<CourseModel>> = ref([]);
 const courseTeacherMap: Ref<Map<Number, TeacherModel>> = ref(new Map());

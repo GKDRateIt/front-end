@@ -13,7 +13,7 @@ const submitSearch = () => {
     console.log(`Searching: ${value.value}`);
   }
   if (value.value.length > 0) {
-    router.push(`/search?keyword=${btoa(value.value)}`);
+    router.push(`/search?keyword=${encodeURIComponent(value.value)}`);
   }
 };
 </script>
