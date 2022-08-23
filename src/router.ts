@@ -1,21 +1,25 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import HomePage from "./components/HomePage.vue";
-import LogIn from "./components/LogIn.vue";
-import CoursePage from "./components/CoursePage.vue";
+import LogIn from "./components/LogInPage.vue";
+import CoursesPage from "./components/CoursesPage.vue";
+import SingleCoursePage from "./components/SingleCoursePage.vue";
 import SearchResult from "./components/SearchResult.vue";
 import NewCourse from "./components/NewCourse.vue";
-import NewReview from "./components/NewReview.vue";
+import NewReviewPage from "./components/NewReviewPage.vue";
+import RecentReviewPage from "./components/RecentReviewPage.vue";
 import AboutPage from "./components/AboutPage.vue";
 import FeedbackPage from "./components/FeedbackPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
   { path: "/log-in", component: LogIn },
-  { path: "/course", component: CoursePage },
+  { path: "/courses", component: CoursesPage },
+  { path: "/course", component: SingleCoursePage },
+  { path: "/recent-review", component: RecentReviewPage },
   { path: "/search", component: SearchResult },
   { path: "/new-course", component: NewCourse },
-  { path: "/new-review", component: NewReview },
+  { path: "/new-review", component: NewReviewPage },
   { path: "/about", component: AboutPage },
   { path: "/feedback", component: FeedbackPage },
 ];
