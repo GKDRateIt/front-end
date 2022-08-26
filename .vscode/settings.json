@@ -6,5 +6,9 @@
     ],
     "editor.tabSize": 2,
     "eslint.format.enable": true,
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "cSpell.words": [
+        "tailwindcss",
+        "ucas"
+    ]
 }

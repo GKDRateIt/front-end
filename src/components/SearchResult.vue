@@ -1,77 +1,72 @@
 <script setup lang="ts">
-import SearchBox from "./SearchBox.vue";
-import { CourseAttribute } from "../common";
+import { ref, Ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { CourseApi, CourseModel } from "../api/course";
+import { SearchApi } from "../api/search";
+import { TeacherApi, TeacherModel } from "../api/teacher";
 
-interface ResultEntry {
-  attr: CourseAttribute;
-  rate: number;
-  lastRated: string;
+const router = useRouter();
+const route = useRoute();
+
+const keyword = route.query.keyword
+  ? decodeURIComponent(String(route.query.keyword))
+  : null;
+
+const courseList: Ref<Array<CourseModel>> = ref([]);
+const courseTeacherMap: Ref<Map<Number, TeacherModel>> = ref(new Map());
+
+if (keyword) {
+  SearchApi.search(keyword).then((result) => {
+    result.forEach((course, index) => {
+      courseList.value.push(course);
+      TeacherApi.getTeacherById(course.teacherId).then((teacher) => {
+        if (teacher) {
+          courseTeacherMap.value.set(index, teacher);
+        }
+      });
+    });
+  });
 }
 
-const getResultEntries = (
-  start: number,
-  end: number
-): Array<ResultEntry> | undefined => {
-  console.log(`getting [${start}, ${end}) searching results...`);
-  return [
-    {
-      attr: {
-        name: "计算机组成原理",
-        id: "XXX",
-        teacher: "ZK",
-        grade: 2.0,
-        semester: "春季学期",
-        category: "专业必修课",
-      },
-      rate: 1.8,
-      lastRated: "2021-11-05",
-    },
-    {
-      attr: {
-        name: "原子物理",
-        id: "YYY",
-        teacher: "HHB",
-        grade: 3.0,
-        semester: "春季学期",
-        category: "专业必修课",
-      },
-      rate: 2.7,
-      lastRated: "2020-7-05",
-    },
-  ];
+const jumpToCoursePage = (course: CourseModel) => {
+  router.push(
+    `/course?code=${course.code}&seq=${course.codeSeq ? course.codeSeq : ""}`
+  );
 };
 </script>
 
 <template>
-  <div class="flex-col space-y-5 w-[70vw] mx-auto mt-[6vh]">
-    <div>
-      <search-box placeholder="继续搜索" />
-    </div>
-    <div class="text-lg">"{{ $route.query.keywords }}" 的搜索结果：</div>
-    <div
-      v-for="resultEntry in getResultEntries(0, 10)"
-      :key="resultEntry.attr.id"
-      class="bg-gray-100 rounded-lg"
-    >
-      <div class="flex space-x-2 text-lg">
-        <div>{{ resultEntry.attr.name }}</div>
-        <div>{{ resultEntry.attr.id }}</div>
-        <div>|</div>
-        <div>主讲教师</div>
-        <div>{{ resultEntry.attr.teacher }}</div>
-        <div>|</div>
-        <div>学分</div>
-        <div>{{ resultEntry.attr.grade }}</div>
-        <div>|</div>
-        <div>开课学期</div>
-        <div>{{ resultEntry.attr.semester }}</div>
-        <div>|</div>
-        <div>{{ resultEntry.attr.category }}</div>
+  <div class="text-lg w-1/2 m-auto mt-20">
+    <div v-for="(item, index) in courseList" :key="index">
+      <div
+        class="space-y-5 bg-gray-100 rounded-lg cursor-pointer"
+        @click="jumpToCoursePage(item)"
+      >
+        <div class="pl-10 pr-10 pt-5 pb-5">
+          <div class="text-4xl">
+            {{ item.name }} ({{ CourseApi.getFullCourseCode(item) }})
+          </div>
+          <div class="text-lg flex space-x-2 leading-1 rounded-md">
+            <div class="flex space-x-2">
+              <div>主讲老师</div>
+              <div>
+                {{ courseTeacherMap.get(index)?.name }}
+              </div>
+            </div>
+            <div>|</div>
+            <div class="flex space-x-2">
+              <div>学分</div>
+              <div>{{ item.credit }}</div>
+            </div>
+            <div>|</div>
+            <div class="flex space-x-2">
+              <div>开课学期</div>
+              <div>{{ item.semester }}</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mt-2 indent-4 text-lg">
-        综合评分 {{ resultEntry.rate }}，最近一条点评为
-        {{ resultEntry.lastRated }}
-      </div>
     </div>
+    <div v-if="courseList.length == 0">无搜索结果</div>
   </div>
 </template>
