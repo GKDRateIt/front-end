@@ -9,7 +9,6 @@ import NewCourse from "./components/NewCourse.vue";
 import NewReviewPage from "./components/NewReviewPage.vue";
 import RecentReviewPage from "./components/RecentReviewPage.vue";
 import AboutPage from "./components/AboutPage.vue";
-import FeedbackPage from "./components/FeedbackPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
@@ -21,7 +20,6 @@ const routes = [
   { path: "/new-course", component: NewCourse },
   { path: "/new-review", component: NewReviewPage },
   { path: "/about", component: AboutPage },
-  { path: "/feedback", component: FeedbackPage },
 ];
 
 const router = createRouter({
