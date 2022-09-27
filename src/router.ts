@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import HomePage from "./components/HomePage.vue";
 import LogIn from "./components/LogInPage.vue";
+import Register from "./components/RegisterPage.vue";
 import CoursesPage from "./components/CoursesPage.vue";
 import SingleCoursePage from "./components/SingleCoursePage.vue";
 import SearchResult from "./components/SearchResult.vue";
@@ -12,7 +13,8 @@ import AboutPage from "./components/AboutPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
-  { path: "/log-in", component: LogIn },
+  { path: "/login", component: LogIn },
+  { path: "/register", component: Register },
   { path: "/courses", component: CoursesPage },
   { path: "/course", component: SingleCoursePage },
   { path: "/recent-review", component: RecentReviewPage },
