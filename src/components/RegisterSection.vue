@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NInput, useMessage } from "naive-ui";
+import { useMessage } from "naive-ui";
 import { ref, watch } from "vue";
 import { strHash } from "../util";
 import { ApiResponse } from "../api/common";

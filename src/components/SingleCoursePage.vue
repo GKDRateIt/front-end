@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { NButton } from "naive-ui";
 import { TeacherApi, TeacherModel } from "../api/teacher";
 import { CourseApi, CourseModel } from "../api/course";
 import { ReviewApi, ReviewModel } from "../api/review";

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref, defineComponent, h } from "vue";
 import { useRoute } from "vue-router";
-import { NButton, NSelect, NInput, NRate, useMessage } from "naive-ui";
+import { NRate, useMessage } from "naive-ui";
 import { CourseApi, CourseModel } from "../api/course";
 import { ReviewApi, ReviewCreateQuery } from "../api/review";
 import { UserApi } from "../api/user";

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { NButton } from "naive-ui";
 import UserProfile from "./UserProfile.vue";
 
 const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };

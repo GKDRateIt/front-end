@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { NButton } from "naive-ui";
 import SearchBox from "./SearchBox.vue";
 
 const router = useRouter();
