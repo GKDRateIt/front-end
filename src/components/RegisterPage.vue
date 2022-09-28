@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NInput, useMessage } from "naive-ui";
+import { useMessage } from "naive-ui";
 import { ref, watch } from "vue";
 import { strHash } from "../util";
 import { ApiResponse } from "../api/common";
@@ -27,13 +27,9 @@ enum VerificationCodeStatus {
 const verificationCodeStatus = ref(VerificationCodeStatus.Unsent);
 
 const sendCode = () => {
-  if (
-    !email.value.endsWith("@mails.ucas.ac.cn") ||
-    email.value.startsWith("@")
-  ) {
-    message.error("请填写正确的 @mails.ucas.ac.cn 邮箱");
-  }
-  UserApi.createVerification(email.value)
+  const emailAddress = email.value + "@mails.ucas.ac.cn";
+  console.log(emailAddress);
+  UserApi.createVerification(emailAddress)
     .then((res: ApiResponse<String>) => {
       if (res.status != "SUCCESS") {
         console.log(res.detail);
@@ -82,16 +78,16 @@ const register = () => {
   // Check password match
   if (password1.value !== password2.value) {
     console.log("Passwords do not match");
-    message.error("Passwords do not match");
+    message.error("密码不一致");
     return;
   }
 
-  // Check email postfix is '@mails.ucas.ac.cn'
-  if (!email.value.endsWith("@mails.ucas.ac.cn")) {
-    console.log("Email must be @mails.ucas.ac.cn");
-    message.error("Email must be @mails.ucas.ac.cn");
-    return;
-  }
+  // // Check email postfix is '@mails.ucas.ac.cn'
+  // if (!email.value.endsWith("@mails.ucas.ac.cn")) {
+  //   console.log("Email must be @mails.ucas.ac.cn");
+  //   message.error("Email must be @mails.ucas.ac.cn");
+  //   return;
+  // }
 
   const userQuery: UserRegisterQuery = {
     nickname: nickname.value,
@@ -120,55 +116,74 @@ const register = () => {
 </script>
 
 <template>
-  <div class="w-1/3 max-w-md flex-col space-y-5 mt-8">
-    <div class="text-lg">没有账号？注册一个！</div>
-    <div class="w-full flex-col space-y-5">
-      <div class="flex w-full">
-        <div class="w-1/5 text-left text-xl">昵称</div>
-        <div class="w-4/5"><n-input v-model:value="nickname" /></div>
-      </div>
-      <div class="flex w-full">
-        <div class="w-1/5 text-left text-xl">邮箱</div>
-        <div class="w-4/5"><n-input v-model:value="email" /></div>
-      </div>
-      <div class="flex w-full">
-        <div class="w-1/5 text-left text-xl">验证码</div>
-        <div class="flex w-4/5 space-x-4">
-          <n-input v-model:value="emailVerificationCode" />
-          <div class="w-2/5">
-            <div
-              v-if="
-                verificationCodeStatus == VerificationCodeStatus.Unsent ||
-                verificationCodeStatus == VerificationCodeStatus.LongSent
-              "
-              @click="sendCode"
-            >
-              <n-button>获取验证码</n-button>
-            </div>
-            <div
-              v-if="verificationCodeStatus == VerificationCodeStatus.JustSent"
-              class="text-md text-center"
-            >
-              {{ resendLimit - sentTime }}s 后重新发送
+  <div class="max-w-md flex-col space-y-5 mt-8 center m-auto">
+    <n-card hoverable size="medium" title="请确保你是国科大学生">
+      <div class="w-full flex-col space-y-5">
+        <div class="flex w-full">
+          <div class="w-1/5 text-left text-base">邮箱</div>
+          <div class="w-4/5">
+            <n-input v-model:value="email">
+              <template #suffix> @mails.ucas.ac.cn </template>
+            </n-input>
+          </div>
+        </div>
+        <div class="flex w-full">
+          <div class="w-1/5 text-left text-base">验证码</div>
+          <div class="flex w-4/5 space-x-4">
+            <n-input v-model:value="emailVerificationCode" />
+            <div class="w-2/5">
+              <div
+                v-if="
+                  verificationCodeStatus == VerificationCodeStatus.Unsent ||
+                  verificationCodeStatus == VerificationCodeStatus.LongSent
+                "
+                @click="sendCode"
+              >
+                <n-button>发送到邮箱</n-button>
+              </div>
+              <div
+                v-if="verificationCodeStatus == VerificationCodeStatus.JustSent"
+                class="text-md text-center"
+              >
+                {{ resendLimit - sentTime }}s 后重新发送
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="flex w-full">
-        <div class="w-1/5 text-left text-xl">密码</div>
-        <div class="w-4/5">
-          <n-input v-model:value="password1" type="password" />
+        <div class="flex w-full">
+          <div class="w-1/5 text-left text-base">昵称</div>
+          <div class="w-4/5">
+            <n-input v-model:value="nickname" />
+          </div>
+        </div>
+        <div class="flex w-full">
+          <div class="w-1/5 text-left text-base">密码</div>
+          <div class="w-4/5">
+            <n-input
+              v-model:value="password1"
+              type="password"
+              show-password-on="mousedown"
+            />
+          </div>
+        </div>
+        <div class="flex w-full">
+          <div class="w-1/5 text-left text-base">确认密码</div>
+          <div class="w-4/5">
+            <n-input
+              v-model:value="password2"
+              type="password"
+              show-password-on="mousedown"
+            />
+          </div>
+        </div>
+        <div class="w-fit mx-auto">
+          <n-button class="text-kg" @click="register"> 注册 </n-button>
         </div>
       </div>
-      <div class="flex w-full">
-        <div class="w-1/5 text-left text-xl">确认</div>
-        <div class="w-4/5">
-          <n-input v-model:value="password2" type="password" />
-        </div>
+      <n-divider />
+      <div class="w-fit mx-auto">
+        <router-link to="/login"> 已有账号？现在登陆 </router-link>
       </div>
-    </div>
-    <div class="w-fit mx-auto">
-      <n-button size="large" class="text-xl" @click="register"> 注册 </n-button>
-    </div>
+    </n-card>
   </div>
 </template>

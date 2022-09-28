@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 // import { useRouter } from "vue-router";
-import { NAutoComplete } from "naive-ui";
 
 const placeholder = "输入你想查询的课程名称或主讲教师";
 

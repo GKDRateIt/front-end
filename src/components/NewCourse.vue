@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineComponent, h, ref } from "vue";
-import { NButton, NInput } from "naive-ui";
+import { NInput } from "naive-ui";
 
 const courseName = ref("");
 const courseCode = ref("");
