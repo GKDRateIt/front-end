@@ -15,6 +15,5 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["vue", "@typescript-eslint", "prettier"],
-  ignorePatterns: ["auto-imports.d.ts", "components.d.ts"],
   rules: {},
 };
