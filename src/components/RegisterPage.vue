@@ -36,7 +36,11 @@ const sendCode = () => {
     .then((res: ApiResponse<String>) => {
       if (res.status != "SUCCESS") {
         console.log(res.detail);
-        message.error("发送验证码失败");
+        if (res.detail == "User registered") {
+          message.error("该邮箱已注册");
+        } else {
+          message.error("发送验证码失败");
+        }
       } else {
         verificationCodeStatus.value = VerificationCodeStatus.JustSent;
       }
@@ -99,7 +103,7 @@ const register = () => {
       if (res.status === "SUCCESS") {
         console.log("注册成功");
         message.success("注册成功");
-        router.push("/");
+        router.push("/login");
       } else {
         console.log(res.detail);
         message.error(`注册失败: ${res.detail}`);
