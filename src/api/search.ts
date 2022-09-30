@@ -13,7 +13,7 @@ export class SearchApi {
       teacherName: keyword,
     });
 
-    courseRes.forEach((course) => courses.push(course));
+    courseRes?.forEach((course) => courses.push(course));
 
     return courses;
   }

@@ -1,4 +1,4 @@
-import { ApiResponse, apiPrefix } from "./common";
+import { apiPrefix, ApiResponse } from "./common";
 
 export interface CourseModel {
   courseId: number;

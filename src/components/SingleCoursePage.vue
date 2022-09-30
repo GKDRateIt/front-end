@@ -36,7 +36,7 @@ CourseApi.getCourse({
 
     ReviewApi.getReviewsByCourseId(courseRes.courseId).then((reviewRes) => {
       reviews.value = reviewRes;
-      for (const review of reviewRes) {
+      for (const review of reviews.value) {
         if (postUsers.value.get(review.userId) == null) {
           UserApi.getUserById(review.userId).then((user) => {
             if (user) {

@@ -17,6 +17,7 @@ const courseTeacherMap: Ref<Map<Number, TeacherModel>> = ref(new Map());
 
 if (keyword) {
   SearchApi.search(keyword).then((result) => {
+    console.log(result);
     result.forEach((course, index) => {
       courseList.value.push(course);
       TeacherApi.getTeacherById(course.teacherId).then((teacher) => {
