@@ -2,8 +2,11 @@
 import { useMessage } from "naive-ui";
 import { ref, watch } from "vue";
 import { strHash } from "../util";
-import { ApiResponse } from "../api/common";
+import { ApiResponse, emailSuffix, addEmailSuffix } from "../api/common";
 import { UserApi, UserRegisterQuery } from "../api/user";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const nickname = ref("");
 const email = ref("");
@@ -27,13 +30,17 @@ enum VerificationCodeStatus {
 const verificationCodeStatus = ref(VerificationCodeStatus.Unsent);
 
 const sendCode = () => {
-  const emailAddress = email.value + "@mails.ucas.ac.cn";
+  const emailAddress = addEmailSuffix(email.value);
   console.log(emailAddress);
   UserApi.createVerification(emailAddress)
     .then((res: ApiResponse<String>) => {
       if (res.status != "SUCCESS") {
         console.log(res.detail);
-        message.error("发送验证码失败");
+        if (res.detail == "User registered") {
+          message.error("该邮箱已注册");
+        } else {
+          message.error("发送验证码失败");
+        }
       } else {
         verificationCodeStatus.value = VerificationCodeStatus.JustSent;
       }
@@ -70,7 +77,7 @@ watch(
 const register = () => {
   if (import.meta.env.DEV) {
     console.log(`nickname: ${nickname.value}`);
-    console.log(`email: ${email.value}`);
+    console.log(`email: ${addEmailSuffix(email.value)}`);
     console.log(`hashed password1: ${strHash(password1.value)}`);
     console.log(`password2: ${strHash(password1.value)}`);
   }
@@ -82,17 +89,10 @@ const register = () => {
     return;
   }
 
-  // // Check email postfix is '@mails.ucas.ac.cn'
-  // if (!email.value.endsWith("@mails.ucas.ac.cn")) {
-  //   console.log("Email must be @mails.ucas.ac.cn");
-  //   message.error("Email must be @mails.ucas.ac.cn");
-  //   return;
-  // }
-
   const userQuery: UserRegisterQuery = {
     nickname: nickname.value,
     verificationCode: emailVerificationCode.value,
-    email: email.value,
+    email: addEmailSuffix(email.value),
     hashedPassword: strHash(password1.value),
     startYear: startYear.value,
     group: "default",
@@ -103,6 +103,7 @@ const register = () => {
       if (res.status === "SUCCESS") {
         console.log("注册成功");
         message.success("注册成功");
+        router.push("/login");
       } else {
         console.log(res.detail);
         message.error(`注册失败: ${res.detail}`);
@@ -123,7 +124,7 @@ const register = () => {
           <div class="w-1/5 text-left text-base">邮箱</div>
           <div class="w-4/5">
             <n-input v-model:value="email">
-              <template #suffix> @mails.ucas.ac.cn </template>
+              <template #suffix> {{ emailSuffix }} </template>
             </n-input>
           </div>
         </div>

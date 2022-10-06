@@ -2,7 +2,7 @@
 import { ref, inject } from "vue";
 import { NButton, NInput, useMessage } from "naive-ui";
 import { useRouter } from "vue-router";
-import { ApiResponse } from "../api/common";
+import { ApiResponse, emailSuffix, addEmailSuffix } from "../api/common";
 import { UserLoginQuery, UserApi } from "../api/user";
 import { strHash } from "../util";
 
@@ -18,7 +18,7 @@ const message = useMessage();
 const logIn = () => {
   console.log("login");
   const userLoginQuery: UserLoginQuery = {
-    email: email.value,
+    email: addEmailSuffix(email.value),
     hashedPassword: strHash(password.value),
   };
 
@@ -58,7 +58,7 @@ const logIn = () => {
           <div class="w-1/5 text-left text-base">邮箱</div>
           <div class="w-4/5">
             <n-input v-model:value="email" placeholder="请输入邮箱名">
-              <template #suffix> @mails.ucas.ac.cn </template>
+              <template #suffix> {{ emailSuffix }} </template>
             </n-input>
           </div>
         </div>
