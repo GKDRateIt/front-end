@@ -1,153 +1,29 @@
-<script>
-import { computed, defineComponent, ref } from "vue";
-import { NIcon, NAutoComplete, useMessage } from "naive-ui";
-import { Search48Regular } from "@vicons/fluent";
+<script setup lang="ts">
+import { ref, computed } from "vue";
+// import { useRouter } from "vue-router";
 
-export default defineComponent({
-  props: {
-    flexible: Boolean,
-  },
-  setup(props) {
-    const searchBoxValRef = ref("");
-    const message = useMessage();
-    return {
-      submitSearch() {
-        var searchStr = searchBoxValRef.value ? searchBoxValRef.value : "";
-        message.info(`Submitted search for ${searchStr}`);
-      },
-      searchVal: searchBoxValRef,
-      inputPopUp: computed(() => {
-        const categories = ["老师", "课程", "帮助"];
-        return categories.map((category) => {
-          const items = ["可能是", "还是说"];
-          return {
-            type: "group",
-            label: category,
-            key: category,
-            children: items.map((possibleItem, index) => {
-              var itemStr = searchBoxValRef.value ? searchBoxValRef.value : "";
-              var del = ["?"].concat(categories).concat(items);
-              del.forEach((subStr) => {
-                itemStr = itemStr.replace(subStr, "");
-              });
-              itemStr = itemStr.trim();
-              if (index == 1) {
-                itemStr = itemStr.split("").reverse().join("");
-              }
-              return possibleItem + " " + itemStr + " " + category + "?";
-            }),
-          };
-        });
-      }),
-    };
-  },
+const placeholder = "输入你想查询的课程名称或主讲教师";
 
-  data() {
-    return {
-      searchBoxHover: !this.flexible,
-      inputIssue: false,
-    };
-  },
+const value = ref("");
 
-  methods: {
-    setHover(val) {
-      if (this.flexible) {
-        console.log(`Search box hover changed to ${val}`);
-        this.searchBoxHover = val;
-      }
-    },
+const options = computed(() => []);
 
-    inputFoucus() {
-      console.log("FOCUS!!!");
-      this.inputIssue = true;
-    },
+const emit = defineEmits(["update:value"]);
 
-    inputBlur() {
-      console.log("BLUR!!!");
-      this.inputIssue = false;
-    },
-
-    inputSelect() {
-      console.log("Select!!!");
-      this.submitSearch();
-    },
-  },
-
-  computed: {
-    searchBoxInputWidth() {
-      if (this.flexible) {
-        if (this.searchBoxHover || this.inputIssue) {
-          return "95%";
-        } else {
-          return "10%";
-        }
-      } else {
-        return "95%";
-      }
-    },
-
-    searchBoxInputOpacity() {
-      if (this.searchBoxHover || this.inputIssue) {
-        return 1;
-      } else {
-        return 0;
-      }
-    },
-  },
-
-  components: {
-    NIcon,
-    NAutoComplete,
-    Search48Regular,
-  },
-});
+const updateValue = (str: string) => {
+  emit("update:value", str);
+  value.value = str;
+};
 </script>
 
-
 <template>
-  <div
-    id="search-box-container"
-    @mouseover="setHover(true)"
-    @mouseleave="setHover(false)"
-  >
-    <div id="search-box-icon" @click="submitSearch">
-      <n-icon size="30px" color="rgb(49, 139, 88)">
-        <search-48-regular />
-      </n-icon>
-    </div>
-    <div
-      id="search-box-input"
-      :style="{
-        width: searchBoxInputWidth,
-        opacity: searchBoxInputOpacity,
-      }"
-    >
-      <n-auto-complete
-        :options="inputPopUp"
-        blur-after-select
-        placeholder="搜索"
-        v-model:value="searchVal"
-        :on-select="inputSelect"
-        :clearable="true"
-        :on-focus="inputFoucus"
-        :on-blur="inputBlur"
-      />
-    </div>
+  <div class="w-[45vw]">
+    <n-auto-complete
+      v-model:value="value"
+      size="large"
+      :placeholder="placeholder"
+      :options="options"
+      :on-update:value="updateValue"
+    />
   </div>
 </template>
-
-<style>
-#search-box-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-#search-box-icon {
-  padding-right: 10px;
-  cursor: pointer;
-}
-
-#search-box-input {
-  transition: 0.3s;
-}
-</style>
