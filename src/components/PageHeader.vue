@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import UserProfile from "./UserProfile.vue";
+import UserProfile from "./user/UserProfile.vue";
 
 const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };
 </script>

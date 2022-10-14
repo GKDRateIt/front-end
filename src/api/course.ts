@@ -47,7 +47,7 @@ export class CourseApi {
       body: JSON.stringify(Object.fromEntries(mp)),
     });
     const response = (await responseBody.json()) as ApiResponse<CourseModel[]>;
-    if (import.meta.env.MODE == "development") {
+    if (import.meta.env.DEV) {
       console.log(response);
     }
     if (response.data) {
@@ -62,7 +62,7 @@ export class CourseApi {
     req: CourseReadQuery
   ): Promise<CourseModel | null> {
     const response = await this.getCourses(req);
-    if (import.meta.env.MODE == "development") {
+    if (import.meta.env.DEV) {
       console.log(response);
     }
     if (response.length > 0) {

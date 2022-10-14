@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useMessage } from "naive-ui";
 import { ref, watch } from "vue";
-import { strHash } from "../util";
-import { ApiResponse, emailSuffix, addEmailSuffix } from "../api/common";
-import { UserApi, UserRegisterQuery } from "../api/user";
+import { strHash } from "../../util";
+import { ApiResponse, emailSuffix, addEmailSuffix } from "../../api/common";
+import { UserApi, UserRegisterQuery } from "../../api/user";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import SearchBox from "./SearchBox.vue";
+import SearchBox from "./search/SearchBox.vue";
 
 const router = useRouter();
 

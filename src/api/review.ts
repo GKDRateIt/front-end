@@ -40,7 +40,7 @@ export class ReviewApi {
       body: JSON.stringify({ _action: "read", courseId: courseId.toString() }),
     });
     const response = (await responseBody.json()) as ApiResponse<ReviewModel[]>;
-    if (import.meta.env.MODE == "development") {
+    if (import.meta.env.DEV) {
       console.log(response);
     }
     if (response.data) {
@@ -66,7 +66,7 @@ export class ReviewApi {
       workload: query.workload.toString(),
       commentText: query.commentText.toString(),
     };
-    if (import.meta.env.MODE == "development") {
+    if (import.meta.env.DEV) {
       console.log(body);
     }
     const responseBody = await fetch(`${apiPrefix}/api/review`, {
@@ -77,7 +77,7 @@ export class ReviewApi {
       body: JSON.stringify(body),
     });
     const response = (await responseBody.json()) as ApiResponse<string>;
-    if (import.meta.env.MODE == "development") {
+    if (import.meta.env.DEV) {
       console.log(response);
     }
     return response;

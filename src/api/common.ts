@@ -7,8 +7,7 @@ export interface ApiResponse<T> {
   limit: number | null;
 }
 
-export const apiPrefix =
-  import.meta.env.MODE == "development" ? "http://localhost:8080" : "";
+export const apiPrefix = import.meta.env.DEV ? "http://localhost:8080" : "";
 
 export const emailSuffix = "@mails.ucas.ac.cn";
 

@@ -2,9 +2,9 @@
 import { ref, inject } from "vue";
 import { NButton, NInput, useMessage } from "naive-ui";
 import { useRouter } from "vue-router";
-import { ApiResponse, emailSuffix, addEmailSuffix } from "../api/common";
-import { UserLoginQuery, UserApi } from "../api/user";
-import { strHash } from "../util";
+import { ApiResponse, emailSuffix, addEmailSuffix } from "../../api/common";
+import { UserLoginQuery, UserApi } from "../../api/user";
+import { strHash } from "../../util";
 
 const { updateIsLoggedIn } = inject("isLoggedIn") as { updateIsLoggedIn: any };
 

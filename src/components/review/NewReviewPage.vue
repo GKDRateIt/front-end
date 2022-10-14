@@ -2,9 +2,9 @@
 import { ref, Ref, defineComponent, h } from "vue";
 import { useRoute } from "vue-router";
 import { NRate, useMessage } from "naive-ui";
-import { CourseApi, CourseModel } from "../api/course";
-import { ReviewApi, ReviewCreateQuery } from "../api/review";
-import { UserApi } from "../api/user";
+import { CourseApi, CourseModel } from "../../api/course";
+import { ReviewApi, ReviewCreateQuery } from "../../api/review";
+import { UserApi } from "../../api/user";
 
 const route = useRoute();
 const message = useMessage();

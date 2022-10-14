@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UserApi } from "../api/user";
+import { UserApi } from "../../api/user";
 
 const jwt = localStorage.getItem("jwt")
   ? UserApi.decodeJwt(localStorage.getItem("jwt") as string)
