@@ -1,5 +1,5 @@
 <template>
-  <div id="footer" class="bg-neutral-200 w-full h-14 bottom-0 absolute">
+  <div id="footer" class="bg-neutral-200 w-full h-14">
     <div class="ml-5">
       <div class="flex space-x-5">
         <div>

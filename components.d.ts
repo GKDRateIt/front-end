@@ -9,12 +9,14 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AboutPage: typeof import('./src/components/AboutPage.vue')['default']
     CoursesPage: typeof import('./src/components/course/CoursesPage.vue')['default']
+    DynamicAngle: typeof import('./src/components/side_bar/DynamicAngle.vue')['default']
     HomePage: typeof import('./src/components/HomePage.vue')['default']
     LogInPage: typeof import('./src/components/user/LogInPage.vue')['default']
     NAutoComplete: typeof import('naive-ui')['NAutoComplete']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NDivider: typeof import('naive-ui')['NDivider']
+    NestedList: typeof import('./src/components/side_bar/NestedList.vue')['default']
     NewCourse: typeof import('./src/components/course/NewCourse.vue')['default']
     NewReviewPage: typeof import('./src/components/review/NewReviewPage.vue')['default']
     NInput: typeof import('naive-ui')['NInput']
@@ -29,6 +31,8 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchBox: typeof import('./src/components/search/SearchBox.vue')['default']
     SearchResult: typeof import('./src/components/search/SearchResult.vue')['default']
+    SideBar: typeof import('./src/components/side_bar/SideBar.vue')['default']
+    SideBarRaw: typeof import('./src/components/side_bar/SideBarRaw.vue')['default']
     SingleCoursePage: typeof import('./src/components/course/SingleCoursePage.vue')['default']
     UserProfile: typeof import('./src/components/user/UserProfile.vue')['default']
   }
