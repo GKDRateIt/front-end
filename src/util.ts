@@ -7,3 +7,7 @@ export function strHash(str: string): string {
   }
   return hash.toString();
 }
+
+export function checkIsNarrowWindow() {
+  return window.innerWidth < 1000;
+}
