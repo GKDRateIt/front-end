@@ -1,25 +1,13 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from "vue";
+import { inject } from "vue";
 import { Icon } from "@iconify/vue";
 import stackIcon from "@iconify-icons/charm/stack";
-import { checkIsNarrowWindow } from "../util";
 import { useSideBar } from "./side_bar/sideBarApi";
 import UserProfile from "./user/UserProfile.vue";
 
 const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };
 
-const isNarrowWindow = ref(checkIsNarrowWindow());
-
 const sideBar = useSideBar();
-
-onMounted(() => {
-  window.onresize = () => {
-    isNarrowWindow.value = checkIsNarrowWindow();
-    if (isNarrowWindow.value && !sideBar.value.collapsed) {
-      sideBar.value.collapsed = true;
-    }
-  };
-});
 
 const mainIconClick = () => {
   sideBar.value.collapsed = !sideBar.value.collapsed;
@@ -30,8 +18,11 @@ const mainIconClick = () => {
   <div id="header" class="bg-neutral-200 w-full h-14 flex justify-between">
     <!-- Left part -->
     <div class="w-fit flex justify-start space-x-6 ml-5 my-3">
-      <div class="flex h-full items-center cursor-pointer" @click="mainIconClick">
-          <Icon :icon="stackIcon" width="30" />
+      <div
+        class="flex h-full items-center cursor-pointer"
+        @click="mainIconClick"
+      >
+        <Icon :icon="stackIcon" width="30" />
       </div>
       <router-link to="/new-course">
         <div class="bg-white h-fit w-fit text-center">

@@ -1,15 +1,35 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import SideBar from "./components/side_bar/SideBar.vue";
 import PageHeader from "./components/PageHeader.vue";
 import PageBody from "./components/PageBody.vue";
 import PageFooter from "./components/PageFooter.vue";
+import { useWindowInfo } from "./util";
+import { useSideBar } from "./components/side_bar/sideBarApi";
+
+const windowInfo = useWindowInfo();
+const sideBar = useSideBar();
+
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    const isNarrowBefore = windowInfo.value.checkIsNarrow();
+    windowInfo.value.width = window.innerWidth;
+    windowInfo.value.height = window.innerHeight;
+    const isNarrowAfter = windowInfo.value.checkIsNarrow();
+    windowInfo.value.isNarrow = isNarrowAfter;
+
+    if (isNarrowBefore != isNarrowAfter) {
+      sideBar.value.collapsed = isNarrowAfter;
+    }
+  });
+});
 </script>
 
 <template>
   <n-message-provider>
     <div class="flex">
       <side-bar />
-      <div class="flex flex-col w-full justify-between min-h-screen">
+      <div class="flex flex-col w-full justify-between min-h-screen z-0">
         <div>
           <page-header />
           <page-body />

@@ -1,3 +1,5 @@
+import { ref } from "vue";
+
 // String hash function
 export function strHash(str: string): string {
   let hash = 0;
@@ -8,6 +10,19 @@ export function strHash(str: string): string {
   return hash.toString();
 }
 
-export function checkIsNarrowWindow() {
-  return window.innerWidth < 1000;
+class WindowInfo {
+  width = window.innerWidth;
+  height = window.innerHeight;
+
+  checkIsNarrow = () => {
+    return this.width < 1000;
+  };
+
+  isNarrow = this.checkIsNarrow();
+}
+
+const windowInfo = ref(new WindowInfo());
+
+export function useWindowInfo() {
+  return windowInfo;
 }

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useWindowInfo } from "../../util";
+import { useSideBar } from "./sideBarApi";
 import SideBarRaw from "./SideBarRaw.vue";
 
 const registries = [
@@ -43,8 +45,32 @@ const registries = [
     ],
   },
 ];
+
+const sideBar = useSideBar();
+const windowInfo = useWindowInfo();
 </script>
 
 <template>
-  <side-bar-raw :registries="registries" />
+  <div v-if="!windowInfo.isNarrow">
+    <side-bar-raw
+      :registries="registries"
+      :class="{
+        'ml-[-350px]': sideBar.collapsed && !windowInfo.isNarrow,
+        'ml-[-400px]': sideBar.collapsed && windowInfo.isNarrow,
+      }"
+    />
+  </div>
+  <div v-else>
+    <div class="absolute top-0 flex space-x-0 bg-none z-10 pointer-events-none">
+      <side-bar-raw
+        :registries="registries"
+        class="z-50 pointer-events-auto"
+        :class="{
+          'ml-[-350px]': sideBar.collapsed && !windowInfo.isNarrow,
+          'ml-[-400px]': sideBar.collapsed && windowInfo.isNarrow,
+        }"
+      />
+      <div class="h-screen w-screen bg-red-50 opacity-0 pointer-events-none"></div>
+    </div>
+  </div>
 </template>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, PropType, ref } from "vue";
+import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
 import { useSideBar } from "./sideBarApi";
-import { checkIsNarrowWindow } from "../../util";
 import NestedList from "./NestedList.vue";
 import DynamicAngle from "./DynamicAngle.vue";
 
@@ -36,18 +35,7 @@ const registry = computed(() => {
   return null;
 });
 
-const isNarrowWindow = ref(checkIsNarrowWindow());
-
 const sideBar = useSideBar();
-
-onMounted(() => {
-  window.onresize = () => {
-    isNarrowWindow.value = checkIsNarrowWindow();
-    if (isNarrowWindow.value && !sideBar.value.collapsed) {
-      sideBar.value.collapsed = true;
-    }
-  };
-});
 
 const direction = computed(() => {
   if (sideBar.value.collapsed) return "right";
@@ -62,10 +50,7 @@ const toggleShow = () => {
   <div
     v-if="registry"
     class="bg-green-200 w-[400px] h-screen flex justify-between"
-    :class="{
-      'ml-[-350px]': sideBar.collapsed,
-    }"
-    style="transition: all 0.5s ease-in-out"
+        style="transition: all 0.5s ease-in-out"
   >
     <div>
       <div class="h-20" />
@@ -73,12 +58,12 @@ const toggleShow = () => {
         <nested-list :items="registry.content" />
       </div>
     </div>
-    <div class="w-0 cursor-pointer" v-if="!isNarrowWindow">
+    <div class="w-0 cursor-pointer" >
       <dynamic-angle
-        class="text-4xl m-auto mt-52"
+        class="text-4xl m-auto mt-5"
         :class="{
-          'ml-[-0.5em]': !sideBar.collapsed,
-          'ml-[-0.3em]': sideBar.collapsed,
+          'ml-[-1em]': !sideBar.collapsed,
+          'ml-[-0.8em]': sideBar.collapsed,
         }"
         :direction="direction"
         @click="toggleShow"
