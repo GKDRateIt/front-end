@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, PropType } from "vue";
+import { computed, PropType, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useSideBar, sideBarWidthPx } from "./sideBarApi";
 import NestedList from "./NestedList.vue";
@@ -22,12 +22,14 @@ const props = defineProps({
 const registry = computed(() => {
   if (props.registries) {
     for (const info of props.registries) {
+      // console.log(info.path);
+      // console.log(route.path);
       if (
         (info.path instanceof String || typeof info.path === "string") &&
         info.path == route.path
       ) {
         return info;
-      } else if (info.path instanceof RegExp && route.path.match(info.path)) {
+      } else if (info.path instanceof RegExp && info.path.test(route.path)) {
         return info;
       }
     }
@@ -42,6 +44,7 @@ const direction = computed(() => {
   else return "left";
 });
 const toggleShow = () => {
+  console.log("Toggle sidebar: " + sideBar.value.collapsed);
   sideBar.value.collapsed = !sideBar.value.collapsed;
 };
 

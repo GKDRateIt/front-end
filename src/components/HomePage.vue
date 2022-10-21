@@ -8,9 +8,6 @@ const router = useRouter();
 const value = ref("");
 
 const submitSearch = () => {
-  if (import.meta.env.DEV) {
-    console.log(`Searching: ${value.value}`);
-  }
   if (value.value.length > 0) {
     router.push(`/search?keyword=${encodeURIComponent(value.value)}`);
   }

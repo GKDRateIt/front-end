@@ -75,9 +75,6 @@ export class UserApi {
       body: JSON.stringify(body),
     });
     const response = (await responseBody.json()) as ApiResponse<UserModel[]>;
-    if (import.meta.env.DEV) {
-      console.log(response);
-    }
     if (response.data && response.data.length > 0) {
       return response.data[0];
     } else {
@@ -101,9 +98,6 @@ export class UserApi {
       body: JSON.stringify(body),
     });
     const response = (await responseBody.json()) as ApiResponse<String>;
-    if (import.meta.env.DEV) {
-      console.log(response);
-    }
     return response;
   }
 

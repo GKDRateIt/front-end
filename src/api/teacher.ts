@@ -28,9 +28,6 @@ export class TeacherApi {
       }),
     });
     const response = (await responseBody.json()) as ApiResponse<TeacherModel[]>;
-    if (import.meta.env.DEV) {
-      console.log(response);
-    }
     if (response.data && response.data.length > 0) {
       return response.data[0];
     } else {
@@ -63,9 +60,6 @@ export class TeacherApi {
       body: JSON.stringify(Object.fromEntries(mp)),
     });
     const response = (await responseBody.json()) as ApiResponse<TeacherModel[]>;
-    if (import.meta.env.DEV) {
-      console.log(response);
-    }
     if (response.data) {
       return response.data;
     } else {

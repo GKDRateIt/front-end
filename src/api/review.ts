@@ -40,9 +40,6 @@ export class ReviewApi {
       body: JSON.stringify({ _action: "read", courseId: courseId.toString() }),
     });
     const response = (await responseBody.json()) as ApiResponse<ReviewModel[]>;
-    if (import.meta.env.DEV) {
-      console.log(response);
-    }
     if (response.data) {
       return response.data;
     } else {

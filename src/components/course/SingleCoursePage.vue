@@ -14,10 +14,6 @@ const courseSeq: string | null = route.query.seq
   ? route.query.seq.toString()
   : null;
 
-if (import.meta.env.DEV) {
-  console.log(`courseCode: ${courseCode}, courseSeq: ${courseSeq}`);
-}
-
 const teacher: Ref<TeacherModel | null> = ref(null);
 const course: Ref<CourseModel | null> = ref(null);
 
@@ -48,10 +44,6 @@ CourseApi.getCourse({
     });
   }
 });
-
-if (import.meta.env.DEV) {
-  console.log(course);
-}
 
 const newReview = () => {
   router.push(`/new-review?courseId=${course.value?.courseId}`);
