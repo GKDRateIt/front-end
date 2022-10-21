@@ -22,6 +22,10 @@ onMounted(() => {
       sideBar.value.collapsed = isNarrowAfter;
     }
   });
+
+  window.addEventListener("scroll", () => {
+    windowInfo.value.scrollY = window.scrollY;
+  });
 });
 </script>
 
@@ -39,3 +43,9 @@ onMounted(() => {
     </div>
   </n-message-provider>
 </template>
+
+<style>
+html {
+  scroll-behavior: smooth;
+}
+</style>

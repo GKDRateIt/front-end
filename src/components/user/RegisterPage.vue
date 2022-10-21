@@ -117,7 +117,7 @@ const register = () => {
 </script>
 
 <template>
-  <div class="max-w-md flex-col space-y-5 mt-8 center m-auto">
+  <div class="max-w-md flex-col space-y-5 mt-20 center m-auto">
     <n-card hoverable size="medium" title="请确保你是国科大学生">
       <div class="w-full flex-col space-y-5">
         <div class="flex w-full">

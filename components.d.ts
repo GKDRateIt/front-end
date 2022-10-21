@@ -8,9 +8,10 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AboutPage: typeof import('./src/components/AboutPage.vue')['default']
+    CategoryBox: typeof import('./src/components/home_page/CategoryBox.vue')['default']
     CoursesPage: typeof import('./src/components/course/CoursesPage.vue')['default']
     DynamicAngle: typeof import('./src/components/side_bar/DynamicAngle.vue')['default']
-    HomePage: typeof import('./src/components/HomePage.vue')['default']
+    HomePage: typeof import('./src/components/home_page/HomePage.vue')['default']
     LogInPage: typeof import('./src/components/user/LogInPage.vue')['default']
     NAutoComplete: typeof import('naive-ui')['NAutoComplete']
     NButton: typeof import('naive-ui')['NButton']

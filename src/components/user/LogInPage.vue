@@ -51,7 +51,7 @@ const logIn = () => {
 </script>
 
 <template>
-  <div class="flex-col max-w-md mt-8 m-auto">
+  <div class="flex-col max-w-md mt-20 m-auto">
     <n-card hoverable size="medium" title="登录账号来贡献新评论">
       <div class="w-full flex-col space-y-5">
         <div class="flex w-full">
