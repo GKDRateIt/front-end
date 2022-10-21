@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
-import { useSideBar } from "./sideBarApi";
+import { useSideBar, sideBarWidthPx } from "./sideBarApi";
 import NestedList from "./NestedList.vue";
 import DynamicAngle from "./DynamicAngle.vue";
 
@@ -44,13 +44,18 @@ const direction = computed(() => {
 const toggleShow = () => {
   sideBar.value.collapsed = !sideBar.value.collapsed;
 };
+
+const sideBarStyleObj = {
+  width: sideBarWidthPx + "px",
+};
 </script>
 
 <template>
   <div
     v-if="registry"
-    class="bg-green-200 w-[400px] h-screen flex justify-between"
-        style="transition: all 0.5s ease-in-out"
+    class="bg-green-200 h-screen flex justify-between"
+    style="transition: all 0.5s ease-in-out"
+    :style="sideBarStyleObj"
   >
     <div>
       <div class="h-20" />
@@ -58,7 +63,7 @@ const toggleShow = () => {
         <nested-list :items="registry.content" />
       </div>
     </div>
-    <div class="w-0 cursor-pointer" >
+    <div class="w-0 cursor-pointer">
       <dynamic-angle
         class="text-4xl m-auto mt-5"
         :class="{
