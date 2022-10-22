@@ -37,7 +37,7 @@ interface ResponsiveStyle {
   [key: string]: ResponsiveStyleEntry | string;
 }
 
-function wrapClassStyleEntry(entry: ResponsiveStyleEntry | string): String {
+function wrapStyleEntry(entry: ResponsiveStyleEntry | string): String {
   if (typeof entry === "string" || entry instanceof String) {
     return entry;
   } else {
@@ -49,7 +49,7 @@ export const wrapStyle = (clazz: ResponsiveStyle) => {
   return computed(() => {
     const answer: any = {};
     for (const key in clazz) {
-      answer[key] = wrapClassStyleEntry(clazz[key]);
+      answer[key] = wrapStyleEntry(clazz[key]);
     }
     return answer;
   });
