@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { wrapStyle } from "../../util";
+import { computed } from "vue";
+import { useWindowInfo, wrapStyle } from "../../util";
 import CategoryBox from "./CategoryBox.vue";
+
+const windowInfo = useWindowInfo();
 
 const categoryBoxStyle = wrapStyle({
   "grid-template-columns": {
-    wide: "repeat(4, minmax(0, 1fr))",
+    wide: "repeat(3, minmax(0, 1fr))",
     narrow: "repeat(2, minmax(0, 1fr))",
   },
   "grid-template-rows": {
@@ -26,6 +29,14 @@ const hotCourseStyle = wrapStyle({
   "font-size": { wide: "3em", narrow: "2em" },
   "padding-left": { wide: "30px", narrow: "15px" },
   "padding-top": { wide: "20px", narrow: "5px" },
+});
+
+const singleItemRowStyleClass = computed(() => {
+  if (windowInfo.value.isNarrow) {
+    return "grow";
+  } else {
+    return "";
+  }
 });
 </script>
 
@@ -56,12 +67,12 @@ const hotCourseStyle = wrapStyle({
     <div class="m-auto">
       <div class="bg-[#2755a5] grid content-center" :style="categoryBoxStyle">
         <category-box category="数理基础" :description="['======', '====']" />
+        <category-box category="公共课" :description="['======', '====']" />
         <category-box
-          category="通识/英语课"
+          category="专业课"
           :description="['======', '====']"
+          :class="singleItemRowStyleClass"
         />
-        <category-box category="体育课" :description="['======', '====']" />
-        <category-box category="专业课" :description="['======', '====']" />
       </div>
     </div>
   </div>
