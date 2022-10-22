@@ -37,6 +37,11 @@ interface ResponsiveStyle {
   [key: string]: ResponsiveStyleEntry | string;
 }
 
+interface ResponsiveStyleClass {
+  wide: string;
+  narrow: string;
+}
+
 function wrapStyleEntry(entry: ResponsiveStyleEntry | string): String {
   if (typeof entry === "string" || entry instanceof String) {
     return entry;
@@ -45,12 +50,18 @@ function wrapStyleEntry(entry: ResponsiveStyleEntry | string): String {
   }
 }
 
-export const wrapStyle = (clazz: ResponsiveStyle) => {
+export const wrapStyle = (style: ResponsiveStyle) => {
   return computed(() => {
     const answer: any = {};
-    for (const key in clazz) {
-      answer[key] = wrapStyleEntry(clazz[key]);
+    for (const key in style) {
+      answer[key] = wrapStyleEntry(style[key]);
     }
     return answer;
+  });
+};
+
+export const wrapStyleClass = (clazz: ResponsiveStyleClass) => {
+  return computed(() => {
+    return windowInfo.value.isNarrow ? clazz.narrow : clazz.wide;
   });
 };
