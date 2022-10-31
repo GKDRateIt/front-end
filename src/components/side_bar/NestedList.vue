@@ -63,6 +63,9 @@ const wrapClickFn = (item: LeafNode) => {
         />
         <div v-else></div>
       </div>
+      <div class="h-5">
+        <!-- Flexible empty space -->
+      </div>
     </div>
   </div>
 </template>

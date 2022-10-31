@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue";
+import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
-import { useSideBar, sideBarWidthPx } from "./sideBarApi";
+import { useSideBarInfo, sideBarWidthPx } from "./sideBarApi";
 import NestedList from "./NestedList.vue";
 import DynamicAngle from "./DynamicAngle.vue";
 
@@ -37,15 +37,15 @@ const registry = computed(() => {
   return null;
 });
 
-const sideBar = useSideBar();
+const sideBarInfo = useSideBarInfo();
 
 const direction = computed(() => {
-  if (sideBar.value.collapsed) return "right";
+  if (sideBarInfo.value.collapsed) return "right";
   else return "left";
 });
 const toggleShow = () => {
-  console.log("Toggle sidebar: " + sideBar.value.collapsed);
-  sideBar.value.collapsed = !sideBar.value.collapsed;
+  console.log("Toggle sidebar: " + sideBarInfo.value.collapsed);
+  sideBarInfo.value.collapsed = !sideBarInfo.value.collapsed;
 };
 
 const sideBarStyleObj = {
@@ -56,7 +56,7 @@ const sideBarStyleObj = {
 <template>
   <div
     v-if="registry"
-    class="bg-green-200 h-screen flex justify-between"
+    class="bg-[#d9d9d9] h-screen flex justify-between"
     style="transition: all 0.5s ease-in-out"
     :style="sideBarStyleObj"
   >
@@ -70,8 +70,8 @@ const sideBarStyleObj = {
       <dynamic-angle
         class="text-4xl m-auto mt-5"
         :class="{
-          'ml-[-1em]': !sideBar.collapsed,
-          'ml-[-0.8em]': sideBar.collapsed,
+          'ml-[-1em]': !sideBarInfo.collapsed,
+          'ml-[-0.8em]': sideBarInfo.collapsed,
         }"
         :direction="direction"
         @click="toggleShow"

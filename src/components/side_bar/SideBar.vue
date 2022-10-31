@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useWindowInfo } from "../../util";
-import { useSideBar, sideBarWidthPx } from "./sideBarApi";
+import { useSideBarInfo, sideBarWidthPx } from "./sideBarApi";
 import SideBarRaw from "./SideBarRaw.vue";
 
 const registries = [
@@ -45,19 +45,36 @@ const registries = [
       { name: "TEST 4" },
     ],
   },
+  {
+    path: "/profile",
+    content: [
+      {
+        name: "我的评价",
+        target: () => {},
+      },
+      {
+        name: "我的提交",
+        target: () => {},
+      },
+      {
+        name: "待审核",
+        target: () => {},
+      },
+    ],
+  },
 ];
 
-const sideBar = useSideBar();
+const sideBarInfo = useSideBarInfo();
 const windowInfo = useWindowInfo();
 
 const collapseSideBar = () => {
-  if (!sideBar.value.collapsed) {
-    sideBar.value.collapsed = true;
+  if (!sideBarInfo.value.collapsed) {
+    sideBarInfo.value.collapsed = true;
   }
 };
 
 const sideBarStyleClassObj = computed(() => {
-  if (!sideBar.value.collapsed) {
+  if (!sideBarInfo.value.collapsed) {
     return {};
   } else {
     if (windowInfo.value.isNarrow) {
@@ -87,8 +104,8 @@ const sideBarStyleClassObj = computed(() => {
       <div
         class="h-screen w-screen bg-red-50 opacity-0"
         :class="{
-          'pointer-events-none': sideBar.collapsed,
-          'pointer-events-auto': !sideBar.collapsed,
+          'pointer-events-none': sideBarInfo.collapsed,
+          'pointer-events-auto': !sideBarInfo.collapsed,
         }"
         @click="collapseSideBar"
       ></div>

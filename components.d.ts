@@ -13,7 +13,9 @@ declare module '@vue/runtime-core' {
     DynamicAngle: typeof import('./src/components/side_bar/DynamicAngle.vue')['default']
     HomePage: typeof import('./src/components/home_page/HomePage.vue')['default']
     LogInPage: typeof import('./src/components/user/LogInPage.vue')['default']
-    NAutoComplete: typeof import('naive-ui')['NAutoComplete']
+    MyInCensor: typeof import('./src/components/user/MyInCensor.vue')['default']
+    MyReviews: typeof import('./src/components/user/MyReviews.vue')['default']
+    MySubmissions: typeof import('./src/components/user/MySubmissions.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NDivider: typeof import('naive-ui')['NDivider']
@@ -35,6 +37,5 @@ declare module '@vue/runtime-core' {
     SideBar: typeof import('./src/components/side_bar/SideBar.vue')['default']
     SideBarRaw: typeof import('./src/components/side_bar/SideBarRaw.vue')['default']
     SingleCoursePage: typeof import('./src/components/course/SingleCoursePage.vue')['default']
-    UserProfile: typeof import('./src/components/user/UserProfile.vue')['default']
   }
 }
