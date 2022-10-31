@@ -1,66 +1,49 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { useWindowInfo } from "../../util";
 import { useSideBarInfo, sideBarWidthPx } from "./sideBarApi";
 import SideBarRaw from "./SideBarRaw.vue";
 
-const registries = [
+const router = useRouter();
+
+const profileRelatedContents = [
   {
-    path: "/course",
-    content: [
-      {
-        name: "TEST 1",
-        children: [
-          { name: "Go To New Course", target: "/new-course" },
-          {
-            name: "Show Alert",
-            target: () => {
-              console.log("Child 2 clicked");
-              alert("Child 2 clicked");
-            },
-          },
-          { name: "Child 3" },
-          { name: "Child 4" },
-        ],
-      },
-      {
-        name: "TEST 2",
-      },
-      {
-        name: "TEST 3",
-        children: [
-          { name: "Child 1" },
-          { name: "Child 2" },
-          { name: "Child 3" },
-          {
-            name: "Child 4",
-            children: [
-              { name: "Nested 1" },
-              { name: "Nested 2" },
-              { name: "Nested 3" },
-            ],
-          },
-        ],
-      },
-      { name: "TEST 4" },
-    ],
+    name: "我的评价",
+    target: () => {
+      router.push("/profile/my-reviews");
+    },
   },
   {
+    name: "我的提交",
+    target: () => {
+      router.push("/profile/my-submissions");
+    },
+  },
+  {
+    name: "待审核",
+    target: () => {
+      router.push("/profile/my-in-censor");
+    },
+  },
+];
+
+const registries = [
+  {
     path: "/profile",
-    content: [
-      {
-        name: "我的评价",
-        target: () => {},
-      },
-      {
-        name: "我的提交",
-        target: () => {},
-      },
-      {
-        name: "待审核",
-        target: () => {},
-      },
-    ],
+    content: profileRelatedContents,
+  },
+  {
+    path: "/profile/my-reviews",
+    content: profileRelatedContents,
+  },
+  {
+    path: "/profile/my-submissions",
+    content: profileRelatedContents,
+  },
+  {
+    path: "/profile/my-in-censor",
+    content: profileRelatedContents,
   },
 ];
 

@@ -21,14 +21,21 @@ const props = defineProps({
 
 const registry = computed(() => {
   if (props.registries) {
+    let routePath = route.path;
+    if (routePath.endsWith("/")) {
+      routePath = routePath.substring(0, routePath.length - 1);
+    }
     for (const info of props.registries) {
       // console.log(info.path);
       // console.log(route.path);
-      if (
-        (info.path instanceof String || typeof info.path === "string") &&
-        info.path == route.path
-      ) {
-        return info;
+      if (info.path instanceof String || typeof info.path === "string") {
+        let infoPath = info.path;
+        if (infoPath.endsWith("/")) {
+          infoPath = infoPath.substring(0, infoPath.length - 1);
+        }
+        if (infoPath == routePath) {
+          return info;
+        }
       } else if (info.path instanceof RegExp && info.path.test(route.path)) {
         return info;
       }
