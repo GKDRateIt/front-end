@@ -78,11 +78,11 @@ const searchBarStyleClass = computed(() => {
       </div>
       <!-- Right part -->
       <div class="w-fit flex justify-end space-x-6 pr-6 my-3">
-        <div v-if="isLoggedIn">
+        <router-link v-if="isLoggedIn" to="/profile">
           <div class="bg-white h-fit w-fit text-center">
             <Icon :icon="uiUserProfile" width="40" style="color: #2755a5" />
           </div>
-        </div>
+        </router-link>
         <router-link v-else to="/login">
           <div class="bg-white h-fit w-fit text-center">
             <Icon :icon="uiUserProfile" width="40" style="color: #2755a5" />
