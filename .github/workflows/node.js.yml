@@ -7,7 +7,7 @@ on:
   push:
     branches: [ "master", "dev" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -29,3 +29,8 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test --if-present
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
