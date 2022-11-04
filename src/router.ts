@@ -5,6 +5,7 @@ import AboutPage from "./components/AboutPage.vue";
 import LogIn from "./components/user/LogInPage.vue";
 import Register from "./components/user/RegisterPage.vue";
 import CoursesPage from "./components/course/CoursesPage.vue";
+import SingleCourseAllPage from "./components/course/SingleCourseAllPage.vue"
 import SingleCoursePage from "./components/course/SingleCoursePage.vue";
 import SearchResult from "./components/search/SearchResult.vue";
 import NewCourse from "./components/course/NewCourse.vue";
@@ -16,6 +17,7 @@ const routes = [
   { path: "/login", component: LogIn },
   { path: "/register", component: Register },
   { path: "/courses", component: CoursesPage },
+  { path: "/courseAll", component: SingleCourseAllPage },
   { path: "/course", component: SingleCoursePage },
   { path: "/recent-review", component: RecentReviewPage },
   { path: "/search", component: SearchResult },

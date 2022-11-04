@@ -4,47 +4,70 @@ import { useWindowInfo } from "../../util";
 import { useSideBar, sideBarWidthPx } from "./sideBarApi";
 import SideBarRaw from "./SideBarRaw.vue";
 
-const registries = [
+const sidebar_example = [
   {
-    path: "/course",
-    content: [
+    name: "TEST 1",
+    children: [
+      { name: "Go To New Course", target: "/new-course" },
       {
-        name: "TEST 1",
-        children: [
-          { name: "Go To New Course", target: "/new-course" },
-          {
-            name: "Show Alert",
-            target: () => {
-              console.log("Child 2 clicked");
-              alert("Child 2 clicked");
-            },
-          },
-          { name: "Child 3" },
-          { name: "Child 4" },
-        ],
+        name: "Show Alert",
+        target: () => {
+          console.log("Child 2 clicked");
+          alert("Child 2 clicked");
+        },
       },
-      {
-        name: "TEST 2",
-      },
-      {
-        name: "TEST 3",
-        children: [
-          { name: "Child 1" },
-          { name: "Child 2" },
-          { name: "Child 3" },
-          {
-            name: "Child 4",
-            children: [
-              { name: "Nested 1" },
-              { name: "Nested 2" },
-              { name: "Nested 3" },
-            ],
-          },
-        ],
-      },
-      { name: "TEST 4" },
+      { name: "Child 3" },
+      { name: "Child 4" },
     ],
   },
+  {
+    name: "TEST 2",
+  },
+  {
+    name: "TEST 3",
+    children: [
+      { name: "Child 1" },
+      { name: "Child 2" },
+      { name: "Child 3" },
+      {
+        name: "Child 4",
+        children: [
+          { name: "Nested 1" },
+          { name: "Nested 2" },
+          { name: "Nested 3" },
+        ],
+      },
+    ],
+  },
+  { name: "TEST 4" },
+];
+
+const sidebar_test = [
+  {
+    name: "数理基础",
+    children: [{ name: "线性代数" }, { name: "微积分" }],
+  },
+  {
+    name: "公共通识",
+  },
+  {
+    name: "专业",
+    children: [
+      {
+        name: "计算机科学与技术",
+        children: [
+          { name: "操作系统", target: "/course" },
+          { name: "计算机体系结构" },
+        ],
+      },
+    ],
+  },
+];
+
+const registries = [
+  { path: "/sidebar_example", content: sidebar_example },
+  { path: "/course", content: sidebar_test },
+  { path: "/courseAll", content: sidebar_test },
 ];
 
 const sideBar = useSideBar();

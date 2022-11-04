@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue";
+import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
 import { useSideBar, sideBarWidthPx } from "./sideBarApi";
 import NestedList from "./NestedList.vue";
@@ -56,7 +56,7 @@ const sideBarStyleObj = {
 <template>
   <div
     v-if="registry"
-    class="bg-green-200 h-screen flex justify-between"
+    class="bg-[#e9eef6] h-screen flex justify-between"
     style="transition: all 0.5s ease-in-out"
     :style="sideBarStyleObj"
   >

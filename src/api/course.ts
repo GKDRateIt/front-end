@@ -66,11 +66,18 @@ export class CourseApi {
     }
   }
 
+  public static getMainCourseCode(course: CourseModel) {
+    if (course === null) {
+      return "";
+    }
+    return course.code;
+  }
+
   public static getFullCourseCode(course: CourseModel) {
     if (course === null) {
       return "";
     }
-    var ans = course.code;
+    let ans = course.code;
     if (course.codeSeq) {
       ans += "-";
       ans += course.codeSeq;
