@@ -1,48 +1,34 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { useWindowInfo } from "../../util";
-import { useSideBar, sideBarWidthPx } from "./sideBarApi";
+import { useSideBarInfo, sideBarWidthPx } from "./sideBarApi";
 import SideBarRaw from "./SideBarRaw.vue";
 
-const sidebar_example = [
+const router = useRouter();
+
+const profileRelatedContents = [
   {
-    name: "TEST 1",
-    children: [
-      { name: "Go To New Course", target: "/new-course" },
-      {
-        name: "Show Alert",
-        target: () => {
-          console.log("Child 2 clicked");
-          alert("Child 2 clicked");
-        },
-      },
-      { name: "Child 3" },
-      { name: "Child 4" },
-    ],
+    name: "我的评价",
+    target: () => {
+      router.push("/profile/my-reviews");
+    },
   },
   {
-    name: "TEST 2",
+    name: "我的提交",
+    target: () => {
+      router.push("/profile/my-submissions");
+    },
   },
   {
-    name: "TEST 3",
-    children: [
-      { name: "Child 1" },
-      { name: "Child 2" },
-      { name: "Child 3" },
-      {
-        name: "Child 4",
-        children: [
-          { name: "Nested 1" },
-          { name: "Nested 2" },
-          { name: "Nested 3" },
-        ],
-      },
-    ],
+    name: "待审核",
+    target: () => {
+      router.push("/profile/my-in-censor");
+    },
   },
-  { name: "TEST 4" },
 ];
 
-const sidebar_test = [
+const courseRelatedContents = [
   {
     name: "数理基础",
     children: [{ name: "线性代数" }, { name: "微积分" }],
@@ -65,22 +51,37 @@ const sidebar_test = [
 ];
 
 const registries = [
-  { path: "/sidebar_example", content: sidebar_example },
-  { path: "/course", content: sidebar_test },
-  { path: "/courseAll", content: sidebar_test },
+  {
+    path: "/profile",
+    content: profileRelatedContents,
+  },
+  {
+    path: "/profile/my-reviews",
+    content: profileRelatedContents,
+  },
+  {
+    path: "/profile/my-submissions",
+    content: profileRelatedContents,
+  },
+  {
+    path: "/profile/my-in-censor",
+    content: profileRelatedContents,
+  },
+  { path: "/course", content: courseRelatedContents },
+  { path: "/courseAll", content: courseRelatedContents },
 ];
 
-const sideBar = useSideBar();
+const sideBarInfo = useSideBarInfo();
 const windowInfo = useWindowInfo();
 
 const collapseSideBar = () => {
-  if (!sideBar.value.collapsed) {
-    sideBar.value.collapsed = true;
+  if (!sideBarInfo.value.collapsed) {
+    sideBarInfo.value.collapsed = true;
   }
 };
 
 const sideBarStyleClassObj = computed(() => {
-  if (!sideBar.value.collapsed) {
+  if (!sideBarInfo.value.collapsed) {
     return {};
   } else {
     if (windowInfo.value.isNarrow) {
@@ -110,8 +111,8 @@ const sideBarStyleClassObj = computed(() => {
       <div
         class="h-screen w-screen bg-red-50 opacity-0"
         :class="{
-          'pointer-events-none': sideBar.collapsed,
-          'pointer-events-auto': !sideBar.collapsed,
+          'pointer-events-none': sideBarInfo.collapsed,
+          'pointer-events-auto': !sideBarInfo.collapsed,
         }"
         @click="collapseSideBar"
       ></div>

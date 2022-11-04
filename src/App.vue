@@ -5,10 +5,10 @@ import PageHeader from "./components/PageHeader.vue";
 import PageBody from "./components/PageBody.vue";
 import PageFooter from "./components/PageFooter.vue";
 import { useWindowInfo } from "./util";
-import { useSideBar } from "./components/side_bar/sideBarApi";
+import { useSideBarInfo } from "./components/side_bar/sideBarApi";
 
 const windowInfo = useWindowInfo();
-const sideBar = useSideBar();
+const sideBarInfo = useSideBarInfo();
 
 onMounted(() => {
   window.addEventListener("resize", () => {
@@ -19,7 +19,7 @@ onMounted(() => {
     windowInfo.value.isNarrow = isNarrowAfter;
 
     if (isNarrowBefore != isNarrowAfter) {
-      sideBar.value.collapsed = isNarrowAfter;
+      sideBarInfo.value.collapsed = isNarrowAfter;
     }
   });
 
@@ -34,7 +34,7 @@ onMounted(() => {
     <div class="flex">
       <side-bar />
       <div class="flex flex-col w-full justify-between min-h-screen z-0">
-        <div>
+        <div class="flex flex-col space-y-0 w-full min-w-screen">
           <page-header />
           <page-body />
         </div>

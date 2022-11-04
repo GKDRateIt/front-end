@@ -1,13 +1,13 @@
 import { ref } from "vue";
 import { useWindowInfo } from "../../util";
-class SideBar {
+class SideBarInfo {
   collapsed = useWindowInfo().value.isNarrow;
 }
 
 export const sideBarWidthPx = 400;
 
-const SideBarInst = ref(new SideBar());
+const SideBarInst = ref(new SideBarInfo());
 
-export function useSideBar() {
+export function useSideBarInfo() {
   return SideBarInst;
 }

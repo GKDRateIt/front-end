@@ -3,18 +3,17 @@ import { inject, computed, ref, Ref } from "vue";
 import { Icon } from "@iconify/vue";
 import uiUserProfile from "@iconify-icons/healthicons/ui-user-profile-negative";
 import stackIcon from "@iconify-icons/charm/stack";
-import { useSideBar } from "./side_bar/sideBarApi";
-import { useWindowInfo, wrapStyleClass } from "../util";
-import UserProfile from "./user/UserProfile.vue";
+import { useSideBarInfo } from "./side_bar/sideBarApi";
+import { useWindowInfo } from "../util";
 import { NAutoComplete } from "naive-ui";
 
 const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };
 
-const sideBar = useSideBar();
+const sideBarInfo = useSideBarInfo();
 const windowInfo = useWindowInfo();
 
 const mainIconClick = () => {
-  sideBar.value.collapsed = !sideBar.value.collapsed;
+  sideBarInfo.value.collapsed = !sideBarInfo.value.collapsed;
 };
 
 const headerBorderStyle = computed(() => {
@@ -45,7 +44,7 @@ const searchBarStyleClass = computed(() => {
 </script>
 
 <template>
-  <div id="header" class="fixed top-0 w-full" :style="headerBorderStyle">
+  <div id="header" class="top-0 w-full" :style="headerBorderStyle">
     <div class="bg-[#2755a5] w-full h-14 flex justify-between">
       <!-- Left part -->
       <div class="min-w-[350px] w-1/2 flex justify-start space-x-6 pl-5">
@@ -79,9 +78,11 @@ const searchBarStyleClass = computed(() => {
       </div>
       <!-- Right part -->
       <div class="w-fit flex justify-end space-x-6 pr-6 my-3">
-        <div v-if="isLoggedIn">
-          <user-profile />
-        </div>
+        <router-link v-if="isLoggedIn" to="/profile">
+          <div class="bg-white h-fit w-fit text-center">
+            <Icon :icon="uiUserProfile" width="40" style="color: #2755a5" />
+          </div>
+        </router-link>
         <router-link v-else to="/login">
           <div class="bg-white h-fit w-fit text-center">
             <Icon :icon="uiUserProfile" width="40" style="color: #2755a5" />

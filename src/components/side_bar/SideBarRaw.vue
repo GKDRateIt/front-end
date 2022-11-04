@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
-import { useSideBar, sideBarWidthPx } from "./sideBarApi";
+import { useSideBarInfo, sideBarWidthPx } from "./sideBarApi";
 import NestedList from "./NestedList.vue";
 import DynamicAngle from "./DynamicAngle.vue";
 
@@ -21,14 +21,21 @@ const props = defineProps({
 
 const registry = computed(() => {
   if (props.registries) {
+    let routePath = route.path;
+    if (routePath.endsWith("/")) {
+      routePath = routePath.substring(0, routePath.length - 1);
+    }
     for (const info of props.registries) {
       // console.log(info.path);
       // console.log(route.path);
-      if (
-        (info.path instanceof String || typeof info.path === "string") &&
-        info.path == route.path
-      ) {
-        return info;
+      if (info.path instanceof String || typeof info.path === "string") {
+        let infoPath = info.path;
+        if (infoPath.endsWith("/")) {
+          infoPath = infoPath.substring(0, infoPath.length - 1);
+        }
+        if (infoPath == routePath) {
+          return info;
+        }
       } else if (info.path instanceof RegExp && info.path.test(route.path)) {
         return info;
       }
@@ -37,15 +44,15 @@ const registry = computed(() => {
   return null;
 });
 
-const sideBar = useSideBar();
+const sideBarInfo = useSideBarInfo();
 
 const direction = computed(() => {
-  if (sideBar.value.collapsed) return "right";
+  if (sideBarInfo.value.collapsed) return "right";
   else return "left";
 });
 const toggleShow = () => {
-  console.log("Toggle sidebar: " + sideBar.value.collapsed);
-  sideBar.value.collapsed = !sideBar.value.collapsed;
+  console.log("Toggle sidebar: " + sideBarInfo.value.collapsed);
+  sideBarInfo.value.collapsed = !sideBarInfo.value.collapsed;
 };
 
 const sideBarStyleObj = {
@@ -56,7 +63,7 @@ const sideBarStyleObj = {
 <template>
   <div
     v-if="registry"
-    class="bg-[#e9eef6] h-screen flex justify-between"
+    class="bg-[#d9d9d9] h-screen flex justify-between"
     style="transition: all 0.5s ease-in-out"
     :style="sideBarStyleObj"
   >
@@ -70,8 +77,8 @@ const sideBarStyleObj = {
       <dynamic-angle
         class="text-4xl m-auto mt-5"
         :class="{
-          'ml-[-1em]': !sideBar.collapsed,
-          'ml-[-0.8em]': sideBar.collapsed,
+          'ml-[-1em]': !sideBarInfo.collapsed,
+          'ml-[-0.8em]': sideBarInfo.collapsed,
         }"
         :direction="direction"
         @click="toggleShow"
