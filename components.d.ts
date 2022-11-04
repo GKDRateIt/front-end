@@ -36,6 +36,7 @@ declare module '@vue/runtime-core' {
     SearchResult: typeof import('./src/components/search/SearchResult.vue')['default']
     SideBar: typeof import('./src/components/side_bar/SideBar.vue')['default']
     SideBarRaw: typeof import('./src/components/side_bar/SideBarRaw.vue')['default']
+    SingleCourseAllPage: typeof import('./src/components/course/SingleCourseAllPage.vue')['default']
     SingleCoursePage: typeof import('./src/components/course/SingleCoursePage.vue')['default']
   }
 }

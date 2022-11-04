@@ -28,6 +28,28 @@ const profileRelatedContents = [
   },
 ];
 
+const courseRelatedContents = [
+  {
+    name: "数理基础",
+    children: [{ name: "线性代数" }, { name: "微积分" }],
+  },
+  {
+    name: "公共通识",
+  },
+  {
+    name: "专业",
+    children: [
+      {
+        name: "计算机科学与技术",
+        children: [
+          { name: "操作系统", target: "/course" },
+          { name: "计算机体系结构" },
+        ],
+      },
+    ],
+  },
+];
+
 const registries = [
   {
     path: "/profile",
@@ -45,6 +67,8 @@ const registries = [
     path: "/profile/my-in-censor",
     content: profileRelatedContents,
   },
+  { path: "/course", content: courseRelatedContents },
+  { path: "/courseAll", content: courseRelatedContents },
 ];
 
 const sideBarInfo = useSideBarInfo();
