@@ -25,6 +25,14 @@ interface IFormPostData {
   method?: "get" | "post";
 }
 
+export function setReqAction(
+  body: any,
+  action: "create" | "read" | "update" | "delete"
+): any {
+  body._action = action;
+  return body;
+}
+
 export async function submitForm({
   url,
   body,

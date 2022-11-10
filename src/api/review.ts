@@ -1,4 +1,4 @@
-import { ApiResponse, apiPrefix } from "./common";
+import { ApiResponse, apiPrefix, submitForm, setReqAction } from "./common";
 
 export interface ReviewModel {
   reviewId: number;
@@ -39,18 +39,9 @@ export class ReviewApi {
   public static async getReviews(
     readQuery: ReviewReadQuery
   ): Promise<ReviewModel[]> {
-    const responseBody = await fetch(`${apiPrefix}/api/review`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        _action: "read",
-        courseId: readQuery.courseId,
-        email: readQuery.email,
-        reviewId: readQuery.reviewId,
-        userId: readQuery.userId,
-      }),
+    const responseBody = await submitForm({
+      url: `${apiPrefix}/api/review`,
+      body: setReqAction(readQuery, "read"),
     });
     const response = (await responseBody.json()) as ApiResponse<ReviewModel[]>;
     if (response.data) {
@@ -95,9 +86,6 @@ export class ReviewApi {
       workload: query.workload.toString(),
       commentText: query.commentText.toString(),
     };
-    if (import.meta.env.DEV) {
-      console.log(body);
-    }
     const responseBody = await fetch(`${apiPrefix}/api/review`, {
       method: "POST",
       headers: {
@@ -106,9 +94,6 @@ export class ReviewApi {
       body: JSON.stringify(body),
     });
     const response = (await responseBody.json()) as ApiResponse<string>;
-    if (import.meta.env.DEV) {
-      console.log(response);
-    }
     return response;
   }
 }
