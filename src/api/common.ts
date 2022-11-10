@@ -19,17 +19,23 @@ export const addEmailSuffix = (name: string): string => {
   }
 };
 
-export async function submitForm(
-  url: string,
-  params: any,
-  method: "get" | "post" = "post"
-) {
+interface IFormPostData {
+  url: string;
+  body: any;
+  method?: "get" | "post";
+}
+
+export async function submitForm({
+  url,
+  body,
+  method = "post",
+}: IFormPostData) {
   const data = new URLSearchParams();
-  for (const key in params) {
-    if (!Object.hasOwn(params, key)) {
+  for (const key in body) {
+    if (!Object.hasOwn(body, key)) {
       continue;
     }
-    data.append(key, params[key]);
+    data.append(key, body[key]);
   }
 
   return fetch(url, {
