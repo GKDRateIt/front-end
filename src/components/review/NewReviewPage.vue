@@ -15,9 +15,6 @@ const course: Ref<null | CourseModel> = ref(null);
 
 CourseApi.getCourse({
   courseId: courseId,
-  code: null,
-  seq: null,
-  name: null,
 }).then((courseRes) => {
   course.value = courseRes;
 });
