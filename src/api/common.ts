@@ -18,3 +18,22 @@ export const addEmailSuffix = (name: string): string => {
     return name + emailSuffix;
   }
 };
+
+export async function submitForm(
+  url: string,
+  params: any,
+  method: "get" | "post" = "post"
+) {
+  const data = new URLSearchParams();
+  for (const key in params) {
+    if (!Object.hasOwn(params, key)) {
+      continue;
+    }
+    data.append(key, params[key]);
+  }
+
+  return fetch(url, {
+    method: method,
+    body: data,
+  });
+}
