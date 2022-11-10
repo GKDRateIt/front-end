@@ -11,27 +11,29 @@ export interface ReviewModel {
   difficulty: number;
   workload: number;
   commentText: string;
-  myGrade: string | null;
-  myMajor: number | null;
+  myGrade?: string;
+  myMajor?: number;
 }
 
 export interface ReviewCreateQuery {
-  courseId: string;
+  courseId: number;
   email: string;
-  createTime: string;
-  lastUpdateTime: string;
-  overallRecommendation: string;
-  quality: string;
-  difficulty: string;
-  workload: string;
+  createTime: number;
+  lastUpdateTime: number;
+  overallRecommendation: number;
+  quality: number;
+  difficulty: number;
+  workload: number;
   commentText: string;
+  myGrade?: string;
+  myMajor?: number;
 }
 
 export interface ReviewReadQuery {
-  courseId?: string;
+  courseId?: number;
   email?: string;
-  reviewId?: string;
-  userId?: string;
+  reviewId?: number;
+  userId?: number;
 }
 
 export class ReviewApi {
@@ -54,14 +56,14 @@ export class ReviewApi {
   public static async getReviewsByCourseId(
     courseId: number
   ): Promise<ReviewModel[]> {
-    return this.getReviews({ courseId: courseId.toString() });
+    return this.getReviews({ courseId: courseId });
   }
 
   // post to `${apiPrefix}/api/review`
   public static async getReviewsByUserId(
     userId: number
   ): Promise<ReviewModel[]> {
-    return this.getReviews({ userId: userId.toString() });
+    return this.getReviews({ userId: userId });
   }
 
   public static async getReviewsByUserEmail(
@@ -74,24 +76,9 @@ export class ReviewApi {
   public static async createReview(
     query: ReviewCreateQuery
   ): Promise<ApiResponse<string>> {
-    const body = {
-      _action: "create",
-      courseId: query.courseId.toString(),
-      email: query.email.toString(),
-      createTime: Date.parse(query.createTime.toString()).toString(),
-      lastUpdateTime: Date.parse(query.lastUpdateTime.toString()).toString(),
-      overallRecommendation: query.overallRecommendation.toString(),
-      quality: query.quality.toString(),
-      difficulty: query.difficulty.toString(),
-      workload: query.workload.toString(),
-      commentText: query.commentText.toString(),
-    };
-    const responseBody = await fetch(`${apiPrefix}/api/review`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+    const responseBody = await submitForm({
+      url: `${apiPrefix}/api/review`,
+      body: setReqAction(query, "create"),
     });
     const response = (await responseBody.json()) as ApiResponse<string>;
     return response;
