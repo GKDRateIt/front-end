@@ -83,4 +83,13 @@ export class ReviewApi {
     const response = (await responseBody.json()) as ApiResponse<string>;
     return response;
   }
+
+  public static getFormattedTime(review: ReviewModel) {
+    if (review === null) return "";
+    let c = review.createTime;
+    let date = "";
+    date =
+      c[0] + "/" + c[1] + "/" + c[2] + " " + c[3] + ":" + c[4] + ":" + c[5];
+    return date;
+  }
 }
