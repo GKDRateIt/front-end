@@ -6,19 +6,12 @@ import CategoryBox from "./CategoryBox.vue";
 const windowInfo = useWindowInfo();
 
 const categoryBoxStyle = wrapStyle({
-  "grid-template-columns": {
-    wide: "repeat(3, minmax(0, 1fr))",
-    narrow: "repeat(2, minmax(0, 1fr))",
-  },
-  "grid-template-rows": {
-    wide: "repeat(1, minmax(0, 1fr))",
-    narrow: "repeat(2, minmax(0, 1fr))",
-  },
-  gap: { wide: "10em", narrow: "2em" },
+  "font-weight": { wide: "15px", narrow: "10px" },
+  gap: { wide: "3em", narrow: "2em" },
 });
 
 const bannerTextStyle = wrapStyle({
-  "font-size": { wide: "3em", narrow: "2em" },
+  "font-size": { wide: "3em", narrow: "2.3em" },
 });
 
 const domainTextStyle = wrapStyle({
@@ -46,9 +39,9 @@ const singleItemRowStyleClass = computed(() => {
   <!--  -->
 
   <!-- Flexible empty space -->
-  <div class="w-full h-[10vh] bg-[#2755a5]"></div>
+  <div class="w-full h-[8vh] bg-[#2755a5]"></div>
   <!-- Welcom text -->
-  <div class="flex-col bg-[#2755a5] m-auto inset-1/2 space-y-1">
+  <div class="flex-col bg-[#2755a5] inset-1/2 space-y-0.5">
     <div class="flex mx-auto w-fit text-white" :style="bannerTextStyle">
       欢迎来到国科大评课社区
     </div>
@@ -62,15 +55,52 @@ const singleItemRowStyleClass = computed(() => {
     </div>
   </div>
   <!-- Flexible empty space -->
-  <div class="w-full h-10 bg-[#2755a5]"></div>
+  <div class="w-full h-6 bg-[#2755a5]"></div>
   <div class="flex space-x-0 bg-[#2755a5]">
     <div class="m-auto">
       <div class="bg-[#2755a5] grid content-center" :style="categoryBoxStyle">
-        <category-box category="数理基础" :description="['======', '====']" />
-        <category-box category="公共课" :description="['======', '====']" />
+        <category-box
+          category="数理基础"
+          subtitle="按课程检索"
+          :description="['微积分I', '微积分II', '线性代数I', '线性代数II']"
+        />
+        <category-box
+          category="公共课"
+          subtitle="按开课单位检索"
+          :description="[
+            '外语系',
+            '创新创业学院',
+            '马克思主义学院',
+            '心理学系',
+            '艺术中心',
+            '体育教研室',
+          ]"
+        />
         <category-box
           category="专业课"
-          :description="['======', '====']"
+          subtitle="按开课单位检索"
+          :description="[
+            '数学学院',
+            '物理学院',
+            '天文学院',
+            '化学学院',
+            '生命学院',
+            '资环学院',
+            '计算机学院',
+            '电子学院',
+            '工程学院',
+            '经管学院',
+            '公管学院',
+            '外语系',
+            '网安学院',
+            '创新创业学院',
+            '马克思主义学院',
+            '心理学系',
+            '人工智能学院',
+            '艺术中心',
+            '体育教研室',
+            '本科部',
+          ]"
           :class="singleItemRowStyleClass"
         />
       </div>
