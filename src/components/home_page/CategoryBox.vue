@@ -15,6 +15,11 @@ defineProps({
     type: String,
     default: "???",
   },
+  // eslint-disable-next-line vue/prop-name-casing
+  cat_path: {
+    type: String,
+    default: "/courses/",
+  },
   subtitle: {
     type: String,
     default: "",
@@ -49,9 +54,11 @@ const descriptionStyle = wrapStyle({
     <div class="rounded-lg bg-white" :style="boxStyle">
       <div>
         <div class="h-2/5 inline-block">
-          <div :style="sectionHeaderStyle">
-            {{ category }}
-          </div>
+          <router-link :to="cat_path">
+            <div :style="sectionHeaderStyle">
+              {{ category }}
+            </div>
+          </router-link>
         </div>
         <div v-if="subtitle" class="inline-block">
           <div :style="subtitleStyle" class="text-neutral-500 inline-block">

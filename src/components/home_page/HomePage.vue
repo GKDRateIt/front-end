@@ -61,11 +61,13 @@ const singleItemRowStyleClass = computed(() => {
       <div class="bg-[#2755a5] grid content-center" :style="categoryBoxStyle">
         <category-box
           category="数理基础"
+          cat_path="/courses/1"
           subtitle="按课程检索"
           :description="['微积分I', '微积分II', '线性代数I', '线性代数II']"
         />
         <category-box
           category="公共课"
+          cat_path="/courses/2"
           subtitle="按开课单位检索"
           :description="[
             '外语系',
@@ -78,6 +80,7 @@ const singleItemRowStyleClass = computed(() => {
         />
         <category-box
           category="专业课"
+          cat_path="/courses/3"
           subtitle="按开课单位检索"
           :description="[
             '数学学院',

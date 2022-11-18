@@ -31,6 +31,7 @@ const routes = [
   { path: "/new-course", component: NewCourse },
   { path: "/new-review", component: NewReviewPage },
   { path: "/about", component: AboutPage },
+  { path: "/courses/:cat_id", name: "courseCat", component: CoursesPage },
 ];
 
 const router = createRouter({
