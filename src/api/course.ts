@@ -1,9 +1,9 @@
-import { apiPrefix, ApiResponse } from "./common";
+import { apiPrefix, ApiResponse, setReqAction, submitForm } from "./common";
 
 export interface CourseModel {
   courseId: number;
   code: string;
-  codeSeq: string | null;
+  codeSeq?: string;
   name: string;
   teacherId: number;
   semester: string;
@@ -11,40 +11,20 @@ export interface CourseModel {
   degree: number;
 }
 
-export class CourseReadQuery {
-  courseId?: string | null = null;
-  code?: string | null = null;
-  seq?: string | null = null;
-  name?: string | null = null;
-  teacherName?: string | null = null;
+export interface CourseReadQuery {
+  courseId?: number;
+  code?: string;
+  seq?: string;
+  name?: string;
+  teacherName?: string;
 }
 
 export class CourseApi {
   // post to `${apiPrefix}/api/course`.
   public static async getCourses(req: CourseReadQuery): Promise<CourseModel[]> {
-    const mp = new Map();
-    mp.set("_action", "read");
-    if (req.courseId) {
-      mp.set("courseId", req.courseId);
-    }
-    if (req.code) {
-      mp.set("code", req.code);
-    }
-    if (req.seq) {
-      mp.set("seq", req.seq);
-    }
-    if (req.name) {
-      mp.set("name", req.name);
-    }
-    if (req.teacherName) {
-      mp.set("teacherName", req.teacherName);
-    }
-    const responseBody = await fetch(`${apiPrefix}/api/course`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(Object.fromEntries(mp)),
+    const responseBody = await submitForm({
+      url: `${apiPrefix}/api/course`,
+      body: setReqAction(req, "read"),
     });
     const response = (await responseBody.json()) as ApiResponse<CourseModel[]>;
     if (response.data) {
@@ -77,11 +57,11 @@ export class CourseApi {
     if (course === null) {
       return "";
     }
-    let ans = course.code;
+    let answer = course.code;
     if (course.codeSeq) {
-      ans += "-";
-      ans += course.codeSeq;
+      answer += "-";
+      answer += course.codeSeq;
     }
-    return ans;
+    return answer;
   }
 }

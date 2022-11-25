@@ -18,3 +18,36 @@ export const addEmailSuffix = (name: string): string => {
     return name + emailSuffix;
   }
 };
+
+interface IFormPostData {
+  url: string;
+  body: any;
+  method?: "get" | "post";
+}
+
+export function setReqAction(
+  body: any,
+  action: "create" | "read" | "update" | "delete"
+): any {
+  body._action = action;
+  return body;
+}
+
+export async function submitForm({
+  url,
+  body,
+  method = "post",
+}: IFormPostData) {
+  const data = new URLSearchParams();
+  for (const key in body) {
+    if (!Object.hasOwn(body, key)) {
+      continue;
+    }
+    data.append(key, body[key]);
+  }
+
+  return fetch(url, {
+    method: method,
+    body: data,
+  });
+}

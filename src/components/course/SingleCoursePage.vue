@@ -10,9 +10,7 @@ const router = useRouter();
 const route = useRoute();
 
 const courseCode = String(route.query.code);
-const courseSeq: string | null = route.query.seq
-  ? route.query.seq.toString()
-  : null;
+const courseSeq: string | undefined = route.query.seq?.toString();
 
 const teacher: Ref<TeacherModel | null> = ref(null);
 const course: Ref<CourseModel | null> = ref(null);

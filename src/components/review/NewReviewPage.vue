@@ -9,15 +9,12 @@ import { UserApi } from "../../api/user";
 const route = useRoute();
 const message = useMessage();
 
-const courseId = String(route.query.courseId);
+const courseId = Number(route.query.courseId);
 
 const course: Ref<null | CourseModel> = ref(null);
 
 CourseApi.getCourse({
   courseId: courseId,
-  code: null,
-  seq: null,
-  name: null,
 }).then((courseRes) => {
   course.value = courseRes;
 });
@@ -77,14 +74,14 @@ const submitReview = () => {
   }
 
   const query: ReviewCreateQuery = {
-    courseId: courseId.toString(),
+    courseId: courseId,
     email: String(userEmail),
-    createTime: new Date().toString(),
-    lastUpdateTime: new Date().toString(),
-    overallRecommendation: overallRecommendation.value.toString(),
-    quality: quality.value.toString(),
-    difficulty: difficulty.value.toString(),
-    workload: workload.value.toString(),
+    createTime: new Date().getTime(),
+    lastUpdateTime: new Date().getTime(),
+    overallRecommendation: overallRecommendation.value,
+    quality: quality.value,
+    difficulty: difficulty.value,
+    workload: workload.value,
     commentText: commentText.value,
   };
   ReviewApi.createReview(query)
