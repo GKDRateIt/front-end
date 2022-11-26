@@ -8,7 +8,7 @@ import MyReviews from "./components/user/MyReviews.vue";
 import MySubmissions from "./components/user/MySubmissions.vue";
 import MyInCensor from "./components/user/MyInCensor.vue";
 import CoursesPage from "./components/course/CoursesPage.vue";
-import SingleCourseAllPage from "./components/course/SingleCourseAllPage.vue"
+import SingleCourseAllPage from "./components/course/SingleCourseAllPage.vue";
 import SingleCoursePage from "./components/course/SingleCoursePage.vue";
 import SearchResult from "./components/search/SearchResult.vue";
 import NewCourse from "./components/course/NewCourse.vue";
@@ -31,6 +31,7 @@ const routes = [
   { path: "/new-course", component: NewCourse },
   { path: "/new-review", component: NewReviewPage },
   { path: "/about", component: AboutPage },
+  { path: "/courses/:cat_id", name: "courseCat", component: CoursesPage },
 ];
 
 const router = createRouter({
