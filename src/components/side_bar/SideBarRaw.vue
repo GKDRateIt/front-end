@@ -63,7 +63,7 @@ const sideBarStyleObj = {
 <template>
   <div
     v-if="registry"
-    class="bg-[#d9d9d9] h-screen flex justify-between"
+    class="bg-[#d9d9d9] min-h-screen flex justify-between"
     style="transition: all 0.5s ease-in-out"
     :style="sideBarStyleObj"
   >
