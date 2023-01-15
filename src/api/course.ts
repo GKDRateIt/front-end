@@ -14,7 +14,7 @@ export interface CourseModel {
 export interface CourseReadQuery {
   courseId?: number;
   code?: string;
-  seq?: string;
+  codeSeq?: string;
   name?: string;
   teacherName?: string;
 }

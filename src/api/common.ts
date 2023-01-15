@@ -40,7 +40,7 @@ export async function submitForm({
 }: IFormPostData) {
   const data = new URLSearchParams();
   for (const key in body) {
-    if (!Object.hasOwn(body, key)) {
+    if (!Object.hasOwn(body, key) || !body[key]) {
       continue;
     }
     data.append(key, body[key]);

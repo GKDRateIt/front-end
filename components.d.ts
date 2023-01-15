@@ -8,7 +8,9 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AboutPage: typeof import('./src/components/AboutPage.vue')['default']
+    AllCourses: typeof import('./src/components/course/AllCourses.vue')['default']
     CategoryBox: typeof import('./src/components/home_page/CategoryBox.vue')['default']
+    CourseMultipleTeachers: typeof import('./src/components/course/CourseMultipleTeachers.vue')['default']
     CoursesPage: typeof import('./src/components/course/CoursesPage.vue')['default']
     DynamicAngle: typeof import('./src/components/side_bar/DynamicAngle.vue')['default']
     HomePage: typeof import('./src/components/home_page/HomePage.vue')['default']
@@ -37,6 +39,8 @@ declare module '@vue/runtime-core' {
     SideBar: typeof import('./src/components/side_bar/SideBar.vue')['default']
     SideBarRaw: typeof import('./src/components/side_bar/SideBarRaw.vue')['default']
     SingleCourseAllPage: typeof import('./src/components/course/SingleCourseAllPage.vue')['default']
+    SingleCourseMultipleTeacher: typeof import('./src/components/course/SingleCourseMultipleTeacher.vue')['default']
+    SingleCourseMultipleTeachers: typeof import('./src/components/course/SingleCourseMultipleTeachers.vue')['default']
     SingleCoursePage: typeof import('./src/components/course/SingleCoursePage.vue')['default']
   }
 }

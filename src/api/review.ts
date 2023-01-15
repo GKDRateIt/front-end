@@ -31,6 +31,8 @@ export interface ReviewCreateQuery {
 
 export interface ReviewReadQuery {
   courseId?: number;
+  courseCode?: string;
+  courseCodeSeq?: string;
   email?: string;
   reviewId?: number;
   userId?: number;

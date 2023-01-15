@@ -6,10 +6,8 @@ import LogIn from "./components/user/LogInPage.vue";
 import Register from "./components/user/RegisterPage.vue";
 import MyReviews from "./components/user/MyReviews.vue";
 import MySubmissions from "./components/user/MySubmissions.vue";
-import MyInCensor from "./components/user/MyInCensor.vue";
-import CoursesPage from "./components/course/CoursesPage.vue";
-import SingleCourseAllPage from "./components/course/SingleCourseAllPage.vue";
-import SingleCoursePage from "./components/course/SingleCoursePage.vue";
+import AllCourses from "./components/course/AllCourses.vue";
+import CourseMutipleTeachers from "./components/course/CourseMultipleTeachers.vue";
 import SearchResult from "./components/search/SearchResult.vue";
 import NewCourse from "./components/course/NewCourse.vue";
 import NewReviewPage from "./components/review/NewReviewPage.vue";
@@ -22,16 +20,14 @@ const routes = [
   { path: "/profile", component: MyReviews },
   { path: "/profile/my-reviews", component: MyReviews },
   { path: "/profile/my-submissions", component: MySubmissions },
-  { path: "/profile/my-in-censor", component: MyInCensor },
-  { path: "/courses", component: CoursesPage },
-  { path: "/courseAll", component: SingleCourseAllPage },
-  { path: "/course", component: SingleCoursePage },
+  { path: "/courses", component: AllCourses },
+  { path: "/course", component: CourseMutipleTeachers },
   { path: "/recent-review", component: RecentReviewPage },
   { path: "/search", component: SearchResult },
   { path: "/new-course", component: NewCourse },
   { path: "/new-review", component: NewReviewPage },
   { path: "/about", component: AboutPage },
-  { path: "/courses/:cat_id", name: "courseCat", component: CoursesPage },
+  { path: "/courses/:cat_id", name: "courseCategory", component: AllCourses },
 ];
 
 const router = createRouter({
