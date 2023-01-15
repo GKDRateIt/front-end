@@ -75,9 +75,15 @@ export class UserApi {
     return response;
   }
 
-  public static decodeJwt = (token: string | null): any | null => {
-    if (token == null) {
-      return null;
+  public static getStoredJwtStr = (): any | undefined => {
+    return localStorage.getItem("jwt");
+  };
+
+  public static decodeJwt = (
+    token: string | null | undefined
+  ): any | undefined => {
+    if (!token) {
+      return undefined;
     }
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");

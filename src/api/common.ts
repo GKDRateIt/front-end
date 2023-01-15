@@ -1,3 +1,5 @@
+import { UserApi } from "./user";
+
 export interface ApiResponse<T> {
   status: string;
   detail: string;
@@ -23,6 +25,7 @@ interface IFormPostData {
   url: string;
   body: any;
   method?: "get" | "post";
+  withPermInfo?: boolean;
 }
 
 export function setReqAction(
@@ -37,6 +40,7 @@ export async function submitForm({
   url,
   body,
   method = "post",
+  withPermInfo = true,
 }: IFormPostData) {
   const data = new URLSearchParams();
   for (const key in body) {
@@ -45,9 +49,15 @@ export async function submitForm({
     }
     data.append(key, body[key]);
   }
+  const headers: any = {};
+  if (withPermInfo) {
+    const jwt = UserApi.getStoredJwtStr();
+    headers["Authorization"] = `Bearer ${jwt}`;
+  }
 
   return fetch(url, {
     method: method,
+    headers: headers,
     body: data,
   });
 }

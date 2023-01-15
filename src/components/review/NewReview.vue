@@ -12,15 +12,15 @@ const message = useMessage();
 
 const windowInfo = useWindowInfo();
 
-const courseCode = route.query.courseCode?.toString();
-const courseCodeSeq = route.query.courseCodeSeq?.toString();
+const paramCourseCode = route.query.courseCode?.toString();
+const paramCourseCodeSeq = route.query.courseCodeSeq?.toString();
 
 const courses: Ref<CourseModel[]> = ref([]);
 const selectedCourse: Ref<null | CourseModel> = ref(null);
 
 CourseApi.getCourses({
-  code: courseCode,
-  codeSeq: courseCodeSeq,
+  code: paramCourseCode,
+  codeSeq: paramCourseCodeSeq,
 }).then((rCourses) => {
   courses.value = rCourses;
   if (rCourses.length > 0) {
@@ -101,31 +101,41 @@ const submitReview = () => {
     return;
   }
 
-  const query: ReviewCreateQuery = {
-    // courseId: courseId,
-    courseId: -1,
-    email: String(userEmail),
-    createTime: new Date().getTime(),
-    lastUpdateTime: new Date().getTime(),
-    overallRecommendation: overallRecommendation.value,
-    quality: quality.value,
-    difficulty: difficulty.value,
-    workload: workload.value,
-    commentText: commentText.value,
-  };
-  ReviewApi.createReview(query)
-    .then((result) => {
-      if (result.status == "SUCCESS") {
-        message.success("评论提交成功");
-      } else {
-        console.log(result);
-        message.error("评论提交失败");
-      }
-    })
-    .catch((err) => {
-      console.log("评论提交失败" + err);
-      message.error("评论提交失败" + err);
-    });
+  let courseId = -1;
+  CourseApi.getCourse({
+    code: selectedCourse.value?.code,
+    codeSeq: selectedCourse.value?.codeSeq,
+  }).then((course) => {
+    if (!course) {
+      message.error("找不到指定的课程");
+      return;
+    }
+    courseId = course.courseId;
+    const query: ReviewCreateQuery = {
+      courseId: courseId,
+      email: String(userEmail),
+      createTime: new Date().getTime(),
+      lastUpdateTime: new Date().getTime(),
+      overallRecommendation: overallRecommendation.value,
+      quality: quality.value,
+      difficulty: difficulty.value,
+      workload: workload.value,
+      commentText: commentText.value,
+    };
+    ReviewApi.createReview(query)
+      .then((result) => {
+        if (result.status == "SUCCESS") {
+          message.success("评论提交成功");
+        } else {
+          console.log(result);
+          message.error("评论提交失败");
+        }
+      })
+      .catch((err) => {
+        console.log("评论提交失败" + err);
+        message.error("评论提交失败" + err);
+      });
+  });
 };
 
 const RatingBar = defineComponent({
