@@ -18,12 +18,12 @@ const mainIconClick = () => {
 
 const headerBorderStyle = computed(() => {
   const style: any = {};
-  if (windowInfo.value.scrollY < 300) {
-    //
-  } else {
-    // style["border-bottom-width"] = "2px";
-    // style["border-bottom-collor"] = "grey";
-  }
+  // if (windowInfo.value.scrollY < 300) {
+  //   //
+  // } else {
+  //   // style["border-bottom-width"] = "2px";
+  //   // style["border-bottom-collor"] = "grey";
+  // }
   return style;
 });
 
