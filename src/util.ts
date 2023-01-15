@@ -65,3 +65,15 @@ export const wrapStyleClass = (clazz: ResponsiveStyleClass) => {
     return windowInfo.value.isNarrow ? clazz.narrow : clazz.wide;
   });
 };
+
+export const formatSemester = (semester: string): string => {
+  if (semester === "autumn") {
+    return "秋季学期";
+  } else if (semester === "spring") {
+    return "春季学期";
+  } else if (semester === "summer") {
+    return "夏季学期";
+  } else {
+    return "???";
+  }
+};

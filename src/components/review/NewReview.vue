@@ -1,22 +1,31 @@
 <script setup lang="ts">
-import { ref, Ref, defineComponent, h } from "vue";
+import { ref, Ref, defineComponent, h, computed } from "vue";
 import { useRoute } from "vue-router";
 import { NRate, useMessage } from "naive-ui";
 import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewCreateQuery } from "../../api/review";
 import { UserApi } from "../../api/user";
+import { formatSemester, useWindowInfo } from "../../util";
 
 const route = useRoute();
 const message = useMessage();
 
-const courseId = Number(route.query.courseId);
+const windowInfo = useWindowInfo();
 
-const course: Ref<null | CourseModel> = ref(null);
+const courseCode = route.query.courseCode?.toString();
+const courseCodeSeq = route.query.courseCodeSeq?.toString();
 
-CourseApi.getCourse({
-  courseId: courseId,
-}).then((courseRes) => {
-  course.value = courseRes;
+const courses: Ref<CourseModel[]> = ref([]);
+const selectedCourse: Ref<null | CourseModel> = ref(null);
+
+CourseApi.getCourses({
+  code: courseCode,
+  codeSeq: courseCodeSeq,
+}).then((rCourses) => {
+  courses.value = rCourses;
+  if (rCourses.length > 0) {
+    selectedCourse.value = rCourses[0];
+  }
 });
 
 const userEmail = UserApi.getLoggedInUserEmail();
@@ -29,7 +38,7 @@ const difficulty = ref(0);
 const workload = ref(0);
 
 const semesterSelectOptions = (() => {
-  var years = [];
+  let years = [];
   for (let y = 2014; y <= Number(new Date().getFullYear()); ++y) {
     years.push(y);
   }
@@ -42,6 +51,25 @@ const semesterSelectOptions = (() => {
     })
     .reverse();
 })();
+
+const courseSelectOptions = computed(() => {
+  return courses.value.map((course) => {
+    let fullCode = CourseApi.getFullCourseCode(course);
+    return {
+      label: fullCode,
+      value: fullCode,
+    };
+  });
+});
+
+const handleCourseSelectUpdate = (value: string) => {
+  let course = courses.value.find((course) => {
+    CourseApi.getFullCourseCode(course) == value;
+  });
+  if (course) {
+    selectedCourse.value = course;
+  }
+};
 
 const validRating = (v: Number): boolean => {
   if (!Number.isInteger(v)) {
@@ -74,7 +102,8 @@ const submitReview = () => {
   }
 
   const query: ReviewCreateQuery = {
-    courseId: courseId,
+    // courseId: courseId,
+    courseId: -1,
     email: String(userEmail),
     createTime: new Date().getTime(),
     lastUpdateTime: new Date().getTime(),
@@ -127,25 +156,42 @@ const RatingBar = defineComponent({
 
 <template>
   <div
-    v-if="userEmail && courseId && course"
-    class="flex-col max-w-[900px] mt-[8vh] mx-auto space-y-8"
+    v-if="userEmail && courses && selectedCourse"
+    class="flex-col mx-auto space-y-8"
+    :class="{
+      'w-11/12': windowInfo.isNarrow,
+      'max-w-[900px]': !windowInfo.isNarrow,
+    }"
   >
-    <div class="text-4xl">{{ course.name }} ({{ courseId }})</div>
+    <div class="h-3"></div>
+    <div class="text-4xl flex space-x-5">
+      <div>{{ selectedCourse?.name }}</div>
+      <div v-if="courses && courses.length == 1">
+        ({{ CourseApi.getFullCourseCode(selectedCourse) }})
+      </div>
+      <div v-else-if="courses && courses.length > 1" class="min-w-[150px]">
+        <n-select
+          :default-value="CourseApi.getFullCourseCode(selectedCourse)"
+          :options="courseSelectOptions"
+          @update:value="handleCourseSelectUpdate"
+        />
+      </div>
+    </div>
     <div class="flex space-x-5">
       <div class="text-lg flex space-x-2 leading-10 bg-gray-100 rounded-md">
         <div class="flex space-x-2">
           <div>主讲老师</div>
-          <div>{{ course.teacherId }}</div>
+          <div>占位符</div>
         </div>
         <div>|</div>
         <div class="flex space-x-2">
           <div>学分</div>
-          <div>{{ course.credit }}</div>
+          <div>{{ selectedCourse.credit }}</div>
         </div>
         <div>|</div>
         <div class="flex space-x-2">
           <div>开课学期</div>
-          <div>{{ course.semester }}</div>
+          <div>{{ formatSemester(selectedCourse.semester) }}</div>
         </div>
         <!-- <div>|</div>
         <div class="flex space-x-2">

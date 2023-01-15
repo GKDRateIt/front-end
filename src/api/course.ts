@@ -53,8 +53,8 @@ export class CourseApi {
     return course.code;
   }
 
-  public static getFullCourseCode(course: CourseModel) {
-    if (course === null) {
+  public static getFullCourseCode(course: CourseModel | null | undefined) {
+    if (!course) {
       return "";
     }
     let answer = course.code;

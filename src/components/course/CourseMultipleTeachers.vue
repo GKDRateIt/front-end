@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, Ref, computed } from "vue";
-import { onBeforeRouteUpdate, useRoute } from "vue-router";
+import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { TeacherApi, TeacherModel } from "../../api/teacher";
 import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewModel } from "../../api/review";
 import { UserModel } from "../../api/user";
+import { formatSemester } from "../../util";
 
-// const router = useRouter();
+const router = useRouter();
 const route = useRoute();
 
 let courseCode = String(route.query.code);
@@ -94,9 +95,22 @@ const filteredReviews = computed(() => {
   });
 });
 
-// const newReview = (courseId: number) => {
-//   router.push(`/new-review?courseId=${courseId}`);
-// };
+const newReview = () => {
+  let code = courseCode;
+  let codeSeq = courseCodeSeq;
+  if (selectedTeacherId.value) {
+    const targetCourse = courses.value.find((course) => {
+      return course.teacherId == selectedTeacherId.value;
+    });
+    if (targetCourse) {
+      code = targetCourse.code;
+      codeSeq = targetCourse.codeSeq;
+    }
+  }
+  router.push(
+    `/new-review?courseCode=${code}&courseCodeSeq=${codeSeq ? codeSeq : ""}`
+  );
+};
 </script>
 
 <template>
@@ -106,7 +120,7 @@ const filteredReviews = computed(() => {
   >
     <div>
       <div class="text-sm text-neutral-500">
-        {{ courses[0].semester === "autumn" ? "秋季学期" : "春季学期" }}
+        {{ formatSemester(courses[0].semester) }}
         {{ courses[0].credit }}学分
       </div>
       <div class="inline-flex space-x-3">
@@ -175,7 +189,7 @@ const filteredReviews = computed(() => {
       <span>我也要评价！</span>
       <span>立刻</span>
       <span class="ml-2">
-        <n-button> 新增点评 </n-button>
+        <n-button @click="newReview"> 新增点评 </n-button>
       </span>
     </div>
   </div>
