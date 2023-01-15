@@ -64,7 +64,7 @@ const courseSelectOptions = computed(() => {
 
 const handleCourseSelectUpdate = (value: string) => {
   let course = courses.value.find((course) => {
-    CourseApi.getFullCourseCode(course) == value;
+    return CourseApi.getFullCourseCode(course) == value;
   });
   if (course) {
     selectedCourse.value = course;
