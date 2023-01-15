@@ -1,4 +1,4 @@
-import { ApiResponse, apiPrefix } from "./common";
+import { ApiResponse, apiPrefix, submitForm, setReqAction } from "./common";
 
 export interface UserModel {
   userId: number;
@@ -27,20 +27,9 @@ export class UserApi {
   public static async createUser(
     reqBody: UserRegisterQuery
   ): Promise<ApiResponse<String>> {
-    const response = await fetch(`${apiPrefix}/api/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        _action: "create",
-        email: reqBody.email,
-        hashedPassword: reqBody.hashedPassword,
-        nickname: reqBody.nickname,
-        startYear: reqBody.startYear,
-        verificationCode: reqBody.verificationCode,
-        group: reqBody.group,
-      }),
+    const response = await submitForm({
+      url: `${apiPrefix}/api/user`,
+      body: setReqAction(reqBody, "create"),
     });
     return response.json();
   }
@@ -52,7 +41,6 @@ export class UserApi {
     const response = await fetch(`${apiPrefix}/api/login`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Basic ${btoa(
           `${query.email}:${query.hashedPassword}`
         )}`,
@@ -63,21 +51,11 @@ export class UserApi {
 
   // Post id to `${apiPrefix}/api/user`
   public static async getUserById(userId: number): Promise<UserModel | null> {
-    const body = {
-      _action: "read",
-      userId: userId.toString(),
-    };
-    const responseBody = await fetch(`${apiPrefix}/api/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+    const responseBody = await submitForm({
+      url: `${apiPrefix}/api/user`,
+      body: setReqAction({ userId }, "read"),
     });
     const response = (await responseBody.json()) as ApiResponse<UserModel[]>;
-    if (import.meta.env.MODE == "development") {
-      console.log(response);
-    }
     if (response.data && response.data.length > 0) {
       return response.data[0];
     } else {
@@ -89,27 +67,23 @@ export class UserApi {
   public static async createVerification(
     email: string
   ): Promise<ApiResponse<String>> {
-    const body = {
-      _action: "create",
-      email: email,
-    };
-    const responseBody = await fetch(`${apiPrefix}/api/email-verification`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+    const responseBody = await submitForm({
+      url: `{apiPrefix}/api/email-verification`,
+      body: setReqAction({ email }, "create"),
     });
     const response = (await responseBody.json()) as ApiResponse<String>;
-    if (import.meta.env.MODE == "development") {
-      console.log(response);
-    }
     return response;
   }
 
-  public static decodeJwt = (token: string | null): any | null => {
-    if (token == null) {
-      return null;
+  public static getStoredJwtStr = (): any | undefined => {
+    return localStorage.getItem("jwt");
+  };
+
+  public static decodeJwt = (
+    token: string | null | undefined
+  ): any | undefined => {
+    if (!token) {
+      return undefined;
     }
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
