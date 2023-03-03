@@ -32,7 +32,6 @@ declare module '@vue/runtime-core' {
     RegisterPage: typeof import('./src/components/user/RegisterPage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SearchBox: typeof import('./src/components/search/SearchBox.vue')['default']
     SearchResult: typeof import('./src/components/search/SearchResult.vue')['default']
     SideBar: typeof import('./src/components/side_bar/SideBar.vue')['default']
     SideBarRaw: typeof import('./src/components/side_bar/SideBarRaw.vue')['default']
