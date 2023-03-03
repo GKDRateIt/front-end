@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { inject, computed, ref, Ref } from "vue";
+import { useRouter } from "vue-router";
 import { Icon } from "@iconify/vue";
 import uiUserProfile from "@iconify-icons/healthicons/ui-user-profile-negative";
 import stackIcon from "@iconify-icons/charm/stack";
@@ -8,6 +9,8 @@ import { useWindowInfo } from "../util";
 import { NAutoComplete } from "naive-ui";
 
 const { isLoggedIn } = inject("isLoggedIn") as { isLoggedIn: any };
+
+const router = useRouter();
 
 const sideBarInfo = useSideBarInfo();
 const windowInfo = useWindowInfo();
@@ -28,6 +31,7 @@ const headerBorderStyle = computed(() => {
 });
 
 const searchBarStatus: Ref<"focus" | "blur"> = ref("blur");
+const searchBarText = ref("");
 
 const searchBarStyleClass = computed(() => {
   if (searchBarStatus.value == "focus") {
@@ -41,6 +45,15 @@ const searchBarStyleClass = computed(() => {
   }
   return "";
 });
+
+const submitSearch = () => {
+  router.push({
+    path: "/search",
+    query: {
+      keyword: searchBarText.value,
+    },
+  });
+};
 </script>
 
 <template>
@@ -61,6 +74,8 @@ const searchBarStyleClass = computed(() => {
         </router-link>
         <div class="flex h-full items-center w-2/3">
           <n-auto-complete
+            v-model:value="searchBarText"
+            placeholder="检索课程或老师"
             class="transition-all ease-in-out duration-200"
             :class="searchBarStyleClass"
             @focus="
@@ -73,6 +88,7 @@ const searchBarStyleClass = computed(() => {
                 searchBarStatus = 'blur';
               }
             "
+            @keyup.enter="submitSearch"
           />
         </div>
       </div>
