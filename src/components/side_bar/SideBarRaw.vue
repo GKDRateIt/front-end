@@ -63,7 +63,7 @@ const sideBarStyleObj = {
 <template>
   <div
     v-if="registry"
-    class="bg-[#d9d9d9] w-1/4 min-h-screen top-0 sticky flex justify-between"
+    class="bg-[#E8EFFF] w-1/4 min-h-screen top-0 sticky flex justify-between"
     style="transition: all 0.5s ease-in-out"
     :style="sideBarStyleObj"
   >
@@ -74,10 +74,10 @@ const sideBarStyleObj = {
       </div>
     </div>
     <div
-      class="w-fit m-auto mt-[45vh] mr-[-13px] cursor-pointer bg-green-400 rounded-full"
+      class="w-fit m-auto mt-[45vh] mr-[-13px] cursor-pointer bg-[#6686DD] rounded-full"
     >
       <dynamic-arrow
-        class="text-[40px] text-gray-700"
+        class="text-[40px] text-gray-800"
         :direction="direction"
         @click="toggleShow"
       />
