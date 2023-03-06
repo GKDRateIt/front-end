@@ -3,7 +3,7 @@ import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
 import { useSideBarInfo, sideBarWidthPx } from "./sideBarApi";
 import NestedList from "./NestedList.vue";
-import DynamicAngle from "./DynamicAngle.vue";
+import DynamicArrow from "./DynamicArrow.vue";
 
 const route = useRoute();
 
@@ -63,7 +63,7 @@ const sideBarStyleObj = {
 <template>
   <div
     v-if="registry"
-    class="bg-[#d9d9d9] min-h-screen top-0 sticky flex justify-between"
+    class="bg-[#E8EFFF] w-1/4 min-h-screen top-0 sticky flex justify-between"
     style="transition: all 0.5s ease-in-out"
     :style="sideBarStyleObj"
   >
@@ -73,13 +73,11 @@ const sideBarStyleObj = {
         <nested-list :items="registry.content" />
       </div>
     </div>
-    <div class="w-0 cursor-pointer">
-      <dynamic-angle
-        class="text-4xl m-auto mt-5"
-        :class="{
-          'ml-[-1em]': !sideBarInfo.collapsed,
-          'ml-[-0.8em]': sideBarInfo.collapsed,
-        }"
+    <div
+      class="w-fit m-auto mt-[45vh] mr-[-13px] cursor-pointer bg-[#6686DD] rounded-full"
+    >
+      <dynamic-arrow
+        class="text-[40px] text-gray-800"
         :direction="direction"
         @click="toggleShow"
       />

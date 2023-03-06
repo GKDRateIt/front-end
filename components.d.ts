@@ -11,7 +11,7 @@ declare module '@vue/runtime-core' {
     AllCourses: typeof import('./src/components/course/AllCourses.vue')['default']
     CategoryBox: typeof import('./src/components/home_page/CategoryBox.vue')['default']
     CourseMultipleTeachers: typeof import('./src/components/course/CourseMultipleTeachers.vue')['default']
-    DynamicAngle: typeof import('./src/components/side_bar/DynamicAngle.vue')['default']
+    DynamicArrow: typeof import('./src/components/side_bar/DynamicArrow.vue')['default']
     HomePage: typeof import('./src/components/home_page/HomePage.vue')['default']
     LogInPage: typeof import('./src/components/user/LogInPage.vue')['default']
     MyReviews: typeof import('./src/components/user/MyReviews.vue')['default']

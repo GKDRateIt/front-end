@@ -44,7 +44,7 @@ const sideBarStyleClassObj = computed(() => {
       };
     } else {
       return {
-        "margin-left": -(sideBarWidthPx - 50) + "px",
+        "margin-left": -(sideBarWidthPx - 30) + "px",
       };
     }
   }

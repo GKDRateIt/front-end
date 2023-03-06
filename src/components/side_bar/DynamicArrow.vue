@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Icon } from "@iconify/vue";
-import angleUp from "@iconify-icons/fa/angle-up";
+import keyboardArrowUpSharp from "@iconify-icons/material-symbols/keyboard-arrow-up-sharp";
 
 const props = defineProps({
   direction: {
@@ -27,12 +27,12 @@ const rotate = computed(() => {
 </script>
 
 <template>
-  <div
-    style="transition: rotate 0.3s ease-in-out; width: fit-content"
+  <Icon
+    :icon="keyboardArrowUpSharp"
+    class="w-fit h-fit"
+    style="transition: rotate 0.3s ease-in-out"
     :style="{
       rotate: rotate + 'deg',
     }"
-  >
-    <Icon :icon="angleUp" />
-  </div>
+  />
 </template>
