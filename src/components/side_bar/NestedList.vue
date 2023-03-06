@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType, ref } from "vue";
 import { TreeNode, NonLeafNode, LeafNode } from "./common";
-import DynamicAngle from "./DynamicAngle.vue";
+import DynamicArrow from "./DynamicArrow.vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -48,7 +48,7 @@ const wrapClickFn = (item: LeafNode) => {
       <div v-else>
         <!-- Nested list rendering -->
         <div class="flex cursor-pointer" @click="toggleChildrenCollapse(index)">
-          <dynamic-angle
+          <dynamic-arrow
             :direction="isChildrenCollapsedRef[index] ? 'right' : 'down'"
           />
           <div class="w-2"></div>
