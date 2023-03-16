@@ -42,9 +42,10 @@ export async function submitForm({
   method = "post",
   withPermInfo = true,
 }: IFormPostData) {
+  console.log(`Querying ${url}`);
   const data = new URLSearchParams();
   for (const key in body) {
-    if (!Object.hasOwn(body, key) || !body[key]) {
+    if (!Object.hasOwn(body, key)) {
       continue;
     }
     data.append(key, body[key]);

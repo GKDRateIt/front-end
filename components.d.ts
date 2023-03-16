@@ -15,7 +15,6 @@ declare module '@vue/runtime-core' {
     HomePage: typeof import('./src/components/home_page/HomePage.vue')['default']
     LogInPage: typeof import('./src/components/user/LogInPage.vue')['default']
     MyReviews: typeof import('./src/components/user/MyReviews.vue')['default']
-    MySubmissions: typeof import('./src/components/user/MySubmissions.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NDivider: typeof import('naive-ui')['NDivider']
