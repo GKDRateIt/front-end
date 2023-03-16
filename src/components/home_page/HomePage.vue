@@ -2,7 +2,9 @@
 import { computed } from "vue";
 import { useWindowInfo, wrapStyle } from "../../util";
 import CategoryBox from "./CategoryBox.vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const windowInfo = useWindowInfo();
 
 const categoryBoxStyle = wrapStyle({
@@ -18,12 +20,6 @@ const domainTextStyle = wrapStyle({
   "font-size": { wide: "2.5em", narrow: "1.5em" },
 });
 
-const hotCourseStyle = wrapStyle({
-  "font-size": { wide: "3em", narrow: "2em" },
-  "padding-left": { wide: "30px", narrow: "15px" },
-  "padding-top": { wide: "20px", narrow: "5px" },
-});
-
 const singleItemRowStyleClass = computed(() => {
   if (windowInfo.value.isNarrow) {
     return "grow";
@@ -31,6 +27,10 @@ const singleItemRowStyleClass = computed(() => {
     return "";
   }
 });
+
+const newCourse = () => {
+  router.push("/new-course");
+};
 </script>
 
 <template>
@@ -116,6 +116,9 @@ const singleItemRowStyleClass = computed(() => {
   <!-- Section 2  -->
   <!--  -->
 
-  <div id="hotCourse" :style="hotCourseStyle">热门课程</div>
-  <div class="w-4/5 h-[1000px] m-auto bg-gray-200"></div>
+  <div class="m-auto w-full bg-[#2755a5]">
+    <div class="w-fit m-auto bg-white">
+      <n-button @click="newCourse"> 提交新课程 </n-button>
+    </div>
+  </div>
 </template>
