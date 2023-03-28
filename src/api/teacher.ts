@@ -17,7 +17,7 @@ export class TeacherApi {
   public static async getTeacherById(
     teacherId: number
   ): Promise<TeacherModel | null> {
-    const response = await this.getTeacher({ teacherId });
+    const response = await this.getTeachers({ teacherId });
     if (response && response.length > 0) {
       return response[0];
     } else {
@@ -25,7 +25,7 @@ export class TeacherApi {
     }
   }
 
-  public static async getTeacher(
+  public static async getTeachers(
     query: TeacherReadQuery
   ): Promise<TeacherModel[]> {
     if (!query.email && !query.name && !query.teacherId) {
@@ -44,5 +44,15 @@ export class TeacherApi {
     } else {
       return [];
     }
+  }
+
+  public static async getTeacher(
+    query: TeacherReadQuery
+  ): Promise<TeacherModel | null> {
+    const res = await this.getTeachers(query);
+    if (res.length == 0) {
+      return null;
+    }
+    return res[0];
   }
 }

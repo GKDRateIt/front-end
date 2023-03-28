@@ -9,6 +9,7 @@ export interface CourseModel {
   semester: string;
   credit: number;
   degree: number;
+  category: string;
 }
 
 export interface CourseReadQuery {
@@ -17,6 +18,17 @@ export interface CourseReadQuery {
   codeSeq?: string;
   name?: string;
   teacherName?: string;
+}
+
+export interface CourseCreateQuery {
+  name: string;
+  code: string;
+  codeSeq?: string | null;
+  teacherId: number;
+  semester: string;
+  credit: number;
+  degree: number;
+  category: string;
 }
 
 export class CourseApi {
@@ -47,6 +59,15 @@ export class CourseApi {
     } else {
       return null;
     }
+  }
+
+  public static async createCourse(req: CourseCreateQuery): Promise<String> {
+    const responseBody = await submitForm({
+      url: `${apiPrefix}/api/course`,
+      body: setReqAction(req, "create"),
+    });
+    const response = (await responseBody.json()) as ApiResponse<String>;
+    return response.data ? response.data : "";
   }
 
   public static getMainCourseCode(course: CourseModel) {
