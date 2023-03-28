@@ -123,13 +123,8 @@ const submitReview = () => {
       commentText: commentText.value,
     };
     ReviewApi.createReview(query)
-      .then((result) => {
-        if (result.status == "SUCCESS") {
-          message.success("评论提交成功");
-        } else {
-          console.log(result);
-          message.error("评论提交失败");
-        }
+      .then(() => {
+        message.success("评论提交成功");
       })
       .catch((err) => {
         console.log("评论提交失败" + err);

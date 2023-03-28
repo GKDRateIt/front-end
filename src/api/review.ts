@@ -48,6 +48,9 @@ export class ReviewApi {
       body: setReqAction(readQuery, "read"),
     });
     const response = (await responseBody.json()) as ApiResponse<ReviewModel[]>;
+    if (!response.status.toLowerCase().includes("success")) {
+      throw new Error(response.status);
+    }
     if (response.data) {
       return response.data;
     } else {
@@ -75,15 +78,15 @@ export class ReviewApi {
   }
 
   // post to `${apiPrefix}/api/review` to create new reivew.
-  public static async createReview(
-    query: ReviewCreateQuery
-  ): Promise<ApiResponse<string>> {
+  public static async createReview(query: ReviewCreateQuery): Promise<void> {
     const responseBody = await submitForm({
       url: `${apiPrefix}/api/review`,
       body: setReqAction(query, "create"),
     });
     const response = (await responseBody.json()) as ApiResponse<string>;
-    return response;
+    if (!response.status.toLowerCase().includes("success")) {
+      throw new Error(response.status);
+    }
   }
 
   public static getFormattedTime(review: ReviewModel) {

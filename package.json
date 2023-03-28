@@ -1,7 +1,7 @@
 {
   "name": "gkd-rate-it",
   "private": true,
-  "version": "0.2.4",
+  "version": "0.2.5",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
