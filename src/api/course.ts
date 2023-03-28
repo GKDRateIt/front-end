@@ -27,6 +27,9 @@ export class CourseApi {
       body: setReqAction(req, "read"),
     });
     const response = (await responseBody.json()) as ApiResponse<CourseModel[]>;
+    if (!response.status.toLowerCase().includes("success")) {
+      throw new Error(response.status);
+    }
     if (response.data) {
       return response.data;
     } else {
