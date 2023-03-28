@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { NInput, NSelect } from "naive-ui";
 import { TeacherApi } from "../../api/teacher";
 import { CourseApi } from "../../api/course";
 import { useMessage } from "naive-ui";
 
 const message = useMessage();
+const router = useRouter();
 
 const courseName = ref("");
 const courseCode = ref("");
@@ -29,27 +31,12 @@ const submitRaw = async () => {
     })
   )?.teacherId;
   if (teacherId == null) {
-    message.error("不存在该教师！");
-    return;
+    throw new Error("不存在该教师！");
   }
   let semester = courseSemester.value;
-  if (
-    semester.includes("autumn") ||
-    semester.includes("fall") ||
-    semester.includes("秋")
-  ) {
-    semester = "autumn";
-  } else if (semester.includes("spring") || semester.includes("春")) {
-    semester = "spring";
-  }
   const credit = Number(courseCredit.value);
   const degree = 0;
   let category = courseCategory.value;
-  if (category.includes("公")) {
-    category = "public";
-  } else if (category.includes("专")) {
-    category = "specialized";
-  }
   const req = {
     name,
     code,
@@ -62,6 +49,7 @@ const submitRaw = async () => {
   };
   console.log(req);
   const res = await CourseApi.createCourse(req);
+  return res;
 };
 
 const submit = () => {
@@ -69,10 +57,12 @@ const submit = () => {
   submitRaw()
     .then(() => {
       console.log("Success");
+      message.success("提交成功");
+      router.back();
     })
     .catch((err) => {
-      console.log("Error!");
       console.log(err);
+      message.error(err.toString());
     });
 };
 
