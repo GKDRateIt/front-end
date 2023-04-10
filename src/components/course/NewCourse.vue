@@ -23,14 +23,15 @@ const submitRaw = async () => {
     0,
     sepPos == -1 ? courseCode.value.length : sepPos
   );
-  const codeSeq = sepPos == -1 ? null : courseCode.value.substring(sepPos + 1);
+  const codeSeq =
+    sepPos == -1 ? undefined : courseCode.value.substring(sepPos + 1);
   console.log(`|||${courseTeacher.value}|||`);
   const teacherId = (
     await TeacherApi.getTeacher({
       name: courseTeacher.value,
     })
   )?.teacherId;
-  if (teacherId == null) {
+  if (!teacherId) {
     throw new Error("不存在该教师！");
   }
   let semester = courseSemester.value;
