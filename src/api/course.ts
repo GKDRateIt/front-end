@@ -23,7 +23,7 @@ export interface CourseReadQuery {
 export interface CourseCreateQuery {
   name: string;
   code: string;
-  codeSeq?: string | null;
+  codeSeq?: string;
   teacherId: number;
   semester: string;
   credit: number;

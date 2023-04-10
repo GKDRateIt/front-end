@@ -6,18 +6,29 @@ import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewModel } from "../../api/review";
 import { UserModel } from "../../api/user";
 import { formatSemester } from "../../util";
+import { NRate } from "naive-ui";
 
 const router = useRouter();
 const route = useRoute();
 
 let courseCode = String(route.query.code);
-let courseCodeSeq = route.query.seq?.toString();
+let courseCodeSeq = route.query.seq as string | undefined;
 
-const selectedTeacherId: Ref<number | null> = ref(null);
 const courses: Ref<CourseModel[]> = ref([]);
 
 // courseId to teacher map
 const courseTeacherMap: Ref<Map<number, TeacherModel>> = ref(new Map());
+
+// Selected teacher & course
+const selectedTeacherId: Ref<number | null> = ref(null);
+const selectedCourseId: Ref<number | null> = ref(null);
+const selectedTeacher = computed(() => {
+  if (selectedCourseId.value == null) return undefined;
+  return courseTeacherMap.value.get(selectedCourseId.value);
+});
+const selectedCourse = computed(() => {
+  return courses.value.find((elem) => elem.courseId == selectedCourseId.value);
+});
 
 const reviews: Ref<ReviewModel[]> = ref([]);
 
@@ -31,7 +42,7 @@ const reviewCourseMap: Ref<Map<number, CourseModel>> = ref(new Map());
 
 const refreshData = () => {
   courseCode = String(route.query.code);
-  courseCodeSeq = route.query.seq?.toString();
+  courseCodeSeq = route.query.seq as string | undefined;
 
   selectedTeacherId.value = null;
   courses.value = [];
@@ -42,7 +53,7 @@ const refreshData = () => {
 
   CourseApi.getCourses({
     code: courseCode,
-    codeSeq: courseCodeSeq,
+    ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
   }).then((rCourses) => {
     if (!rCourses) {
       return;
@@ -60,7 +71,7 @@ const refreshData = () => {
 
   ReviewApi.getReviews({
     courseCode: courseCode,
-    courseCodeSeq: courseCodeSeq,
+    ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
   }).then((rReviews) => {
     // console.log(rReviews);
     reviews.value = rReviews;
@@ -130,7 +141,9 @@ const newReview = () => {
             {{ courseCode }}
           </div>
         </div>
-        <div class="text-[24px] leading-9">⭐⭐⭐⭐⭐</div>
+        <div class="text-[24px] leading-9">
+          <n-rate readonly :default-value="5" />
+        </div>
       </div>
     </div>
     <div class="flex-col flex-nowrap space-x-3 space-y-1">
@@ -148,6 +161,7 @@ const newReview = () => {
           @click="
             () => {
               selectedTeacherId = teacher.teacherId;
+              selectedCourseId = courseId;
             }
           "
         >
