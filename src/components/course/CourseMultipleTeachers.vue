@@ -4,7 +4,7 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { TeacherApi, TeacherModel } from "../../api/teacher";
 import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewModel } from "../../api/review";
-import { UserModel } from "../../api/user";
+import { UserApi, UserModel } from "../../api/user";
 import { formatSemester } from "../../util";
 import { NRate } from "naive-ui";
 
@@ -82,6 +82,11 @@ const refreshData = () => {
       if (mappedCourse) {
         reviewCourseMap.value.set(review.reviewId, mappedCourse);
       }
+      UserApi.getUserById(review.reviewId).then((user) => {
+        if (user) {
+          reviewUserMap.value.set(review.reviewId, user);
+        }
+      });
     });
   });
 };
