@@ -71,7 +71,7 @@ const handleCourseSelectUpdate = (value: string) => {
   }
 };
 
-const validRating = (v: Number): boolean => {
+const validRating = (v: number): boolean => {
   if (!Number.isInteger(v)) {
     return false;
   }
@@ -86,10 +86,10 @@ const submitReview = () => {
   console.log(`workload: ${workload.value}`);
   console.log(`commentText: ${commentText.value}`);
 
-  const _overallRecommendation = Number(overallRecommendation.value);
-  const _quality = Number(quality.value);
-  const _difficulty = Number(difficulty.value);
-  const _workload = Number(workload.value);
+  const _overallRecommendation = overallRecommendation.value;
+  const _quality = quality.value;
+  const _difficulty = difficulty.value;
+  const _workload = workload.value;
 
   if (
     !validRating(_overallRecommendation) ||
