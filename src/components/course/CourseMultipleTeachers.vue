@@ -30,6 +30,68 @@ const selectedCourse = computed(() => {
   return courses.value.find((elem) => elem.courseId == selectedCourseId.value);
 });
 
+const avgOverallRecommendation = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.overallRecommendation;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.overallRecommendation;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const avgWorkload = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.workload;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.workload;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const avgDifficulty = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.difficulty;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.difficulty;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const avgQuality = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.quality;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.quality;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const courseLoaded = ref(false);
+const reviewLoaded = ref(false);
+const allLoaded = computed(() => {
+  return courseLoaded.value && reviewLoaded.value;
+});
+
 const reviews: Ref<ReviewModel[]> = ref([]);
 
 // reviewId to user map
@@ -67,6 +129,7 @@ const refreshData = () => {
         }
       });
     });
+    courseLoaded.value = true;
   });
 
   ReviewApi.getReviews({
@@ -88,6 +151,7 @@ const refreshData = () => {
         }
       });
     });
+    reviewLoaded.value = true;
   });
 };
 
@@ -130,8 +194,9 @@ const newReview = () => {
 </script>
 
 <template>
+  <div v-if="!allLoaded">加载中</div>
   <div
-    v-if="courses.length > 0"
+    v-else-if="courses.length > 0"
     class="flex-col space-y-5 m-10 my-20 mx-auto w-2/3"
   >
     <div>
@@ -146,8 +211,12 @@ const newReview = () => {
             {{ courseCode }}
           </div>
         </div>
-        <div class="text-[24px] leading-9">
-          <n-rate readonly :default-value="5" />
+        <div class="text-[24px] leading-9 text-xl font-semibold">
+          <n-rate
+            allow-half
+            readonly
+            :default-value="avgOverallRecommendation"
+          />
         </div>
       </div>
     </div>
@@ -177,9 +246,18 @@ const newReview = () => {
 
     <div class="flex-col space-y-5">
       <div class="w-3/5 rounded-lg px-3 py-2">
-        <div class="text-xl font-semibold">👾课程难度：⭐⭐⭐⭐⭐</div>
-        <div class="text-xl font-semibold">📚作业多少：⭐⭐⭐⭐⭐</div>
-        <div class="text-xl font-semibold">😋收获大小：⭐⭐⭐⭐⭐</div>
+        <div class="flex flex-row space-x-3">
+          <div>👾课程难度：</div>
+          <n-rate allow-half readonly :default-value="avgDifficulty" />
+        </div>
+        <div class="flex flex-row space-x-3">
+          <div>📚作业多少：</div>
+          <n-rate allow-half readonly :default-value="avgWorkload" />
+        </div>
+        <div class="flex flex-row space-x-3">
+          <div>😋收获大小：</div>
+          <n-rate allow-half readonly :default-value="avgQuality" />
+        </div>
       </div>
     </div>
 
@@ -200,6 +278,44 @@ const newReview = () => {
         </div>
         <div class="indent-8 text-lg">
           {{ review.commentText }}
+        </div>
+        <div
+          class="h-auto grid gap-1"
+          style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))"
+        >
+          <div class="flex flex-row space-x-1">
+            <div>难度：</div>
+            <div>
+              <n-rate
+                readonly
+                allow-half
+                :default-value="review.difficulty"
+                size="small"
+              />
+            </div>
+          </div>
+          <div class="flex flex-row space-x-1">
+            <div>作业：</div>
+            <div>
+              <n-rate
+                allow-half
+                readonly
+                :default-value="review.workload"
+                size="small"
+              />
+            </div>
+          </div>
+          <div class="flex flex-row space-x-1">
+            <div>收获：</div>
+            <div>
+              <n-rate
+                allow-half
+                readonly
+                :default-value="review.quality"
+                size="small"
+              />
+            </div>
+          </div>
         </div>
         <div>来自用户 @{{ reviewUserMap.get(review.userId)?.nickname }}</div>
       </div>

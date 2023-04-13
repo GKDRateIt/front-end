@@ -10,6 +10,10 @@ export interface CourseModel {
   credit: number;
   degree: number;
   category: string;
+  overallRecommendation: number;
+  difficulty: number;
+  quality: number;
+  workload: number;
 }
 
 export interface CourseReadQuery {
