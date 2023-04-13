@@ -6,7 +6,7 @@ import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewModel } from "../../api/review";
 import { UserApi, UserModel } from "../../api/user";
 import { formatSemester } from "../../util";
-import { NRate } from "naive-ui";
+import { NRate, NButton } from "naive-ui";
 
 const router = useRouter();
 const route = useRoute();
@@ -22,10 +22,6 @@ const courseTeacherMap: Ref<Map<number, TeacherModel>> = ref(new Map());
 // Selected teacher & course
 const selectedTeacherId: Ref<number | null> = ref(null);
 const selectedCourseId: Ref<number | null> = ref(null);
-const selectedTeacher = computed(() => {
-  if (selectedCourseId.value == null) return undefined;
-  return courseTeacherMap.value.get(selectedCourseId.value);
-});
 const selectedCourse = computed(() => {
   return courses.value.find((elem) => elem.courseId == selectedCourseId.value);
 });
@@ -120,7 +116,6 @@ const refreshData = () => {
     if (!rCourses) {
       return;
     }
-    // console.log(rCourses);
     courses.value = rCourses;
     rCourses.forEach((rCourse) => {
       TeacherApi.getTeacherById(rCourse.teacherId).then((rTeacher) => {
@@ -136,7 +131,6 @@ const refreshData = () => {
     courseCode: courseCode,
     ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
   }).then((rReviews) => {
-    // console.log(rReviews);
     reviews.value = rReviews;
     rReviews.forEach((review) => {
       const mappedCourse = courses.value.find(
@@ -220,28 +214,26 @@ const newReview = () => {
         </div>
       </div>
     </div>
-    <div class="flex-col flex-nowrap space-x-3 space-y-1">
-      <div class="btn-group space-x-2">
-        <div
-          class="btn teacher-btn-select text-white rounded-full px-3 py-1"
-          @click="() => (selectedTeacherId = null)"
-        >
-          <button>全部教师</button>
-        </div>
-        <div
-          v-for="[courseId, teacher] in courseTeacherMap"
-          :key="courseId"
-          class="btn teacher-btn-select text-white rounded-full px-3 py-1"
-          @click="
-            () => {
-              selectedTeacherId = teacher.teacherId;
-              selectedCourseId = courseId;
-            }
-          "
-        >
-          <button>{{ teacher.name }}</button>
-        </div>
-      </div>
+    <div class="flex flex-row space-x-2">
+      <button
+        class="teacher-btn-outer"
+        @click="() => (selectedTeacherId = null)"
+      >
+        <div class="teacher-btn-inner">全部教师</div>
+      </button>
+      <button
+        v-for="[courseId, teacher] in courseTeacherMap"
+        :key="courseId"
+        class="teacher-btn-outer"
+        @click="
+          () => {
+            selectedTeacherId = teacher.teacherId;
+            selectedCourseId = courseId;
+          }
+        "
+      >
+        <div class="teacher-btn-inner">{{ teacher.name }}</div>
+      </button>
     </div>
 
     <div class="flex-col space-y-5">
@@ -331,12 +323,23 @@ const newReview = () => {
   <div v-else>找不到课程</div>
 </template>
 
-<style scoped>
-.teacher-btn-select:active {
-  background-color: #134dba;
+<style>
+.teacher-btn-outer {
+  background-color: #6ea1ff;
+  font-size: 17px;
+  border-radius: 10px;
 }
 
-.teacher-btn-select {
+.teacher-btn-outer:focus {
   background-color: #3b74dc;
+}
+
+.teacher-btn-inner {
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin: auto;
+  color: white;
 }
 </style>
