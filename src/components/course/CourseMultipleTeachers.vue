@@ -4,20 +4,89 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { TeacherApi, TeacherModel } from "../../api/teacher";
 import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewModel } from "../../api/review";
-import { UserModel } from "../../api/user";
+import { UserApi, UserModel } from "../../api/user";
 import { formatSemester } from "../../util";
+import { NRate, NButton } from "naive-ui";
 
 const router = useRouter();
 const route = useRoute();
 
 let courseCode = String(route.query.code);
-let courseCodeSeq = route.query.seq?.toString();
+let courseCodeSeq = route.query.seq as string | undefined;
 
-const selectedTeacherId: Ref<number | null> = ref(null);
 const courses: Ref<CourseModel[]> = ref([]);
 
 // courseId to teacher map
 const courseTeacherMap: Ref<Map<number, TeacherModel>> = ref(new Map());
+
+// Selected teacher & course
+const selectedTeacherId: Ref<number | null> = ref(null);
+const selectedCourseId: Ref<number | null> = ref(null);
+const selectedCourse = computed(() => {
+  return courses.value.find((elem) => elem.courseId == selectedCourseId.value);
+});
+
+const avgOverallRecommendation = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.overallRecommendation;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.overallRecommendation;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const avgWorkload = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.workload;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.workload;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const avgDifficulty = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.difficulty;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.difficulty;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const avgQuality = computed(() => {
+  if (selectedCourse.value) {
+    return selectedCourse.value.quality;
+  }
+  let avg = 0;
+  courses.value.forEach((c) => {
+    avg += c.quality;
+  });
+  if (courses.value.length > 0) {
+    avg /= courses.value.length;
+  }
+  return avg;
+});
+
+const courseLoaded = ref(false);
+const reviewLoaded = ref(false);
+const allLoaded = computed(() => {
+  return courseLoaded.value && reviewLoaded.value;
+});
 
 const reviews: Ref<ReviewModel[]> = ref([]);
 
@@ -31,7 +100,7 @@ const reviewCourseMap: Ref<Map<number, CourseModel>> = ref(new Map());
 
 const refreshData = () => {
   courseCode = String(route.query.code);
-  courseCodeSeq = route.query.seq?.toString();
+  courseCodeSeq = route.query.seq as string | undefined;
 
   selectedTeacherId.value = null;
   courses.value = [];
@@ -42,12 +111,11 @@ const refreshData = () => {
 
   CourseApi.getCourses({
     code: courseCode,
-    codeSeq: courseCodeSeq,
+    ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
   }).then((rCourses) => {
     if (!rCourses) {
       return;
     }
-    // console.log(rCourses);
     courses.value = rCourses;
     rCourses.forEach((rCourse) => {
       TeacherApi.getTeacherById(rCourse.teacherId).then((rTeacher) => {
@@ -56,13 +124,13 @@ const refreshData = () => {
         }
       });
     });
+    courseLoaded.value = true;
   });
 
   ReviewApi.getReviews({
     courseCode: courseCode,
-    courseCodeSeq: courseCodeSeq,
+    ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
   }).then((rReviews) => {
-    // console.log(rReviews);
     reviews.value = rReviews;
     rReviews.forEach((review) => {
       const mappedCourse = courses.value.find(
@@ -71,7 +139,13 @@ const refreshData = () => {
       if (mappedCourse) {
         reviewCourseMap.value.set(review.reviewId, mappedCourse);
       }
+      UserApi.getUserById(review.reviewId).then((user) => {
+        if (user) {
+          reviewUserMap.value.set(review.reviewId, user);
+        }
+      });
     });
+    reviewLoaded.value = true;
   });
 };
 
@@ -114,8 +188,9 @@ const newReview = () => {
 </script>
 
 <template>
+  <div v-if="!allLoaded">加载中</div>
   <div
-    v-if="courses.length > 0"
+    v-else-if="courses.length > 0"
     class="flex-col space-y-5 m-10 my-20 mx-auto w-2/3"
   >
     <div>
@@ -130,37 +205,51 @@ const newReview = () => {
             {{ courseCode }}
           </div>
         </div>
-        <div class="text-[24px] leading-9">⭐⭐⭐⭐⭐</div>
+        <div class="text-[24px] leading-9 text-xl font-semibold">
+          <n-rate
+            allow-half
+            readonly
+            :default-value="avgOverallRecommendation"
+          />
+        </div>
       </div>
     </div>
-    <div class="flex-col flex-nowrap space-x-3 space-y-1">
-      <div class="btn-group space-x-2">
-        <div
-          class="btn teacher-btn-select text-white rounded-full px-3 py-1"
-          @click="() => (selectedTeacherId = null)"
-        >
-          <button>全部教师</button>
-        </div>
-        <div
-          v-for="[courseId, teacher] in courseTeacherMap"
-          :key="courseId"
-          class="btn teacher-btn-select text-white rounded-full px-3 py-1"
-          @click="
-            () => {
-              selectedTeacherId = teacher.teacherId;
-            }
-          "
-        >
-          <button>{{ teacher.name }}</button>
-        </div>
-      </div>
+    <div class="flex flex-row space-x-2">
+      <button
+        class="teacher-btn-outer"
+        @click="() => (selectedTeacherId = null)"
+      >
+        <div class="teacher-btn-inner">全部教师</div>
+      </button>
+      <button
+        v-for="[courseId, teacher] in courseTeacherMap"
+        :key="courseId"
+        class="teacher-btn-outer"
+        @click="
+          () => {
+            selectedTeacherId = teacher.teacherId;
+            selectedCourseId = courseId;
+          }
+        "
+      >
+        <div class="teacher-btn-inner">{{ teacher.name }}</div>
+      </button>
     </div>
 
     <div class="flex-col space-y-5">
       <div class="w-3/5 rounded-lg px-3 py-2">
-        <div class="text-xl font-semibold">👾课程难度：⭐⭐⭐⭐⭐</div>
-        <div class="text-xl font-semibold">📚作业多少：⭐⭐⭐⭐⭐</div>
-        <div class="text-xl font-semibold">😋收获大小：⭐⭐⭐⭐⭐</div>
+        <div class="flex flex-row space-x-3">
+          <div>👾课程难度：</div>
+          <n-rate allow-half readonly :default-value="avgDifficulty" />
+        </div>
+        <div class="flex flex-row space-x-3">
+          <div>📚作业多少：</div>
+          <n-rate allow-half readonly :default-value="avgWorkload" />
+        </div>
+        <div class="flex flex-row space-x-3">
+          <div>😋收获大小：</div>
+          <n-rate allow-half readonly :default-value="avgQuality" />
+        </div>
       </div>
     </div>
 
@@ -182,6 +271,44 @@ const newReview = () => {
         <div class="indent-8 text-lg">
           {{ review.commentText }}
         </div>
+        <div
+          class="h-auto grid gap-1"
+          style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))"
+        >
+          <div class="flex flex-row space-x-1">
+            <div>难度：</div>
+            <div>
+              <n-rate
+                readonly
+                allow-half
+                :default-value="review.difficulty"
+                size="small"
+              />
+            </div>
+          </div>
+          <div class="flex flex-row space-x-1">
+            <div>作业：</div>
+            <div>
+              <n-rate
+                allow-half
+                readonly
+                :default-value="review.workload"
+                size="small"
+              />
+            </div>
+          </div>
+          <div class="flex flex-row space-x-1">
+            <div>收获：</div>
+            <div>
+              <n-rate
+                allow-half
+                readonly
+                :default-value="review.quality"
+                size="small"
+              />
+            </div>
+          </div>
+        </div>
         <div>来自用户 @{{ reviewUserMap.get(review.userId)?.nickname }}</div>
       </div>
     </div>
@@ -196,12 +323,23 @@ const newReview = () => {
   <div v-else>找不到课程</div>
 </template>
 
-<style scoped>
-.teacher-btn-select:active {
-  background-color: #134dba;
+<style>
+.teacher-btn-outer {
+  background-color: #6ea1ff;
+  font-size: 17px;
+  border-radius: 10px;
 }
 
-.teacher-btn-select {
+.teacher-btn-outer:focus {
   background-color: #3b74dc;
+}
+
+.teacher-btn-inner {
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin: auto;
+  color: white;
 }
 </style>
