@@ -1,26 +1,36 @@
 <script setup lang="ts">
-import { ref, Ref, defineComponent, h } from "vue";
+import { ref, Ref, defineComponent, h, computed } from "vue";
 import { useRoute } from "vue-router";
 import { NRate, useMessage } from "naive-ui";
-import { CourseApi, CourseModel } from "../api/course";
-import { ReviewApi, ReviewCreateQuery } from "../api/review";
-import { UserApi } from "../api/user";
+import { CourseApi, CourseModel } from "../../api/course";
+import { ReviewApi, ReviewCreateQuery } from "../../api/review";
+import { UserApi } from "../../api/user";
+import { formatSemester, useWindowInfo } from "../../util";
 
 const route = useRoute();
 const message = useMessage();
 
-const courseId = String(route.query.courseId);
+const windowInfo = useWindowInfo();
 
-const course: Ref<null | CourseModel> = ref(null);
+const paramCourseCode = route.query.courseCode?.toString();
+const paramCourseCodeSeq = route.query.courseCodeSeq?.toString();
 
-CourseApi.getCourse({
-  courseId: courseId,
-  code: null,
-  seq: null,
-  name: null,
-}).then((courseRes) => {
-  course.value = courseRes;
-});
+const courses: Ref<CourseModel[]> = ref([]);
+const selectedCourse: Ref<null | CourseModel> = ref(null);
+
+CourseApi.getCourses({
+  code: paramCourseCode,
+  codeSeq: paramCourseCodeSeq,
+})
+  .then((rCourses) => {
+    courses.value = rCourses;
+    if (rCourses.length > 0) {
+      selectedCourse.value = rCourses[0];
+    }
+  })
+  .catch((e) => {
+    message.error("数据加载错误！" + e);
+  });
 
 const userEmail = UserApi.getLoggedInUserEmail();
 
@@ -32,7 +42,7 @@ const difficulty = ref(0);
 const workload = ref(0);
 
 const semesterSelectOptions = (() => {
-  var years = [];
+  let years = [];
   for (let y = 2014; y <= Number(new Date().getFullYear()); ++y) {
     years.push(y);
   }
@@ -46,7 +56,26 @@ const semesterSelectOptions = (() => {
     .reverse();
 })();
 
-const validRating = (v: Number): boolean => {
+const courseSelectOptions = computed(() => {
+  return courses.value.map((course) => {
+    let fullCode = CourseApi.getFullCourseCode(course);
+    return {
+      label: fullCode,
+      value: fullCode,
+    };
+  });
+});
+
+const handleCourseSelectUpdate = (value: string) => {
+  let course = courses.value.find((course) => {
+    return CourseApi.getFullCourseCode(course) == value;
+  });
+  if (course) {
+    selectedCourse.value = course;
+  }
+};
+
+const validRating = (v: number): boolean => {
   if (!Number.isInteger(v)) {
     return false;
   }
@@ -61,10 +90,10 @@ const submitReview = () => {
   console.log(`workload: ${workload.value}`);
   console.log(`commentText: ${commentText.value}`);
 
-  const _overallRecommendation = Number(overallRecommendation.value);
-  const _quality = Number(quality.value);
-  const _difficulty = Number(difficulty.value);
-  const _workload = Number(workload.value);
+  const _overallRecommendation = overallRecommendation.value;
+  const _quality = quality.value;
+  const _difficulty = difficulty.value;
+  const _workload = workload.value;
 
   if (
     !validRating(_overallRecommendation) ||
@@ -76,29 +105,39 @@ const submitReview = () => {
     return;
   }
 
-  const query: ReviewCreateQuery = {
-    courseId: courseId.toString(),
-    email: String(userEmail),
-    createTime: new Date().toString(),
-    lastUpdateTime: new Date().toString(),
-    overallRecommendation: overallRecommendation.value.toString(),
-    quality: quality.value.toString(),
-    difficulty: difficulty.value.toString(),
-    workload: workload.value.toString(),
-    commentText: commentText.value,
-  };
-  ReviewApi.createReview(query)
-    .then((result) => {
-      if (result.status == "SUCCESS") {
-        message.success("评论提交成功");
-      } else {
-        console.log(result);
-        message.error("评论提交失败");
+  let courseId = -1;
+  CourseApi.getCourse({
+    code: selectedCourse.value?.code,
+    codeSeq: selectedCourse.value?.codeSeq,
+  })
+    .then((course) => {
+      if (!course) {
+        message.error("找不到指定的课程");
+        return;
       }
+      courseId = course.courseId;
+      const query: ReviewCreateQuery = {
+        courseId: courseId,
+        email: String(userEmail),
+        createTime: new Date().getTime(),
+        lastUpdateTime: new Date().getTime(),
+        overallRecommendation: overallRecommendation.value,
+        quality: quality.value,
+        difficulty: difficulty.value,
+        workload: workload.value,
+        commentText: commentText.value,
+      };
+      ReviewApi.createReview(query)
+        .then(() => {
+          message.success("评论提交成功");
+        })
+        .catch((err) => {
+          console.log("评论提交失败" + err);
+          message.error("评论提交失败" + err);
+        });
     })
-    .catch((err) => {
-      console.log("评论提交失败" + err);
-      message.error("评论提交失败" + err);
+    .catch((e) => {
+      message.error("数据加载错误！" + e);
     });
 };
 
@@ -130,25 +169,42 @@ const RatingBar = defineComponent({
 
 <template>
   <div
-    v-if="userEmail && courseId && course"
-    class="flex-col max-w-[900px] mt-[8vh] mx-auto space-y-8"
+    v-if="userEmail && courses && selectedCourse"
+    class="flex-col mx-auto space-y-8"
+    :class="{
+      'w-11/12': windowInfo.isNarrow,
+      'max-w-[900px]': !windowInfo.isNarrow,
+    }"
   >
-    <div class="text-4xl">{{ course.name }} ({{ courseId }})</div>
+    <div class="h-3"></div>
+    <div class="text-4xl flex space-x-5">
+      <div>{{ selectedCourse?.name }}</div>
+      <div v-if="courses && courses.length == 1">
+        ({{ CourseApi.getFullCourseCode(selectedCourse) }})
+      </div>
+      <div v-else-if="courses && courses.length > 1" class="min-w-[150px]">
+        <n-select
+          :default-value="CourseApi.getFullCourseCode(selectedCourse)"
+          :options="courseSelectOptions"
+          @update:value="handleCourseSelectUpdate"
+        />
+      </div>
+    </div>
     <div class="flex space-x-5">
       <div class="text-lg flex space-x-2 leading-10 bg-gray-100 rounded-md">
         <div class="flex space-x-2">
           <div>主讲老师</div>
-          <div>{{ course.teacherId }}</div>
+          <div>占位符</div>
         </div>
         <div>|</div>
         <div class="flex space-x-2">
           <div>学分</div>
-          <div>{{ course.credit }}</div>
+          <div>{{ selectedCourse.credit }}</div>
         </div>
         <div>|</div>
         <div class="flex space-x-2">
           <div>开课学期</div>
-          <div>{{ course.semester }}</div>
+          <div>{{ formatSemester(selectedCourse.semester) }}</div>
         </div>
         <!-- <div>|</div>
         <div class="flex space-x-2">

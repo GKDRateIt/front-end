@@ -1,3 +1,5 @@
+import { UserApi } from "./user";
+
 export interface ApiResponse<T> {
   status: string;
   detail: string;
@@ -7,8 +9,7 @@ export interface ApiResponse<T> {
   limit: number | null;
 }
 
-export const apiPrefix =
-  import.meta.env.MODE == "development" ? "http://localhost:8080" : "";
+export const apiPrefix = import.meta.env.DEV ? "http://localhost:8080" : "";
 
 export const emailSuffix = "@mails.ucas.ac.cn";
 
@@ -19,3 +20,49 @@ export const addEmailSuffix = (name: string): string => {
     return name + emailSuffix;
   }
 };
+
+interface IFormPostData {
+  url: string;
+  body: any;
+  method?: "get" | "post";
+  withPermInfo?: boolean;
+}
+
+export function setReqAction(
+  body: any,
+  action: "create" | "read" | "update" | "delete"
+): any {
+  let _body = JSON.parse(JSON.stringify(body));
+  _body._action = action;
+  // console.log("Setting req action");
+  // console.log(_body);
+  return _body;
+}
+
+export async function submitForm({
+  url,
+  body,
+  method = "post",
+  withPermInfo = true,
+}: IFormPostData) {
+  console.log(`Querying ${url}`);
+  // console.log(body);
+  const data = new URLSearchParams();
+  for (const key in body) {
+    if (!Object.hasOwn(body, key)) {
+      continue;
+    }
+    data.append(key, body[key]);
+  }
+  const headers: any = {};
+  if (withPermInfo) {
+    const jwt = UserApi.getStoredJwtStr();
+    headers["Authorization"] = `Bearer ${jwt}`;
+  }
+
+  return fetch(url, {
+    method: method,
+    headers: headers,
+    body: data,
+  });
+}

@@ -1,7 +1,7 @@
 {
   "name": "gkd-rate-it",
   "private": true,
-  "version": "1.0.0-alpha",
+  "version": "0.2.6",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -10,28 +10,32 @@
     "lint-fix": "npx eslint --ext .ts,.js,.vue . --fix"
   },
   "dependencies": {
-    "vue": "^3.2.25",
-    "vue-router": "^4.0.16"
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@iconify/vue": "^3.2.1",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "@typescript-eslint/parser": "^5.28.0",
+    "@iconify-icons/charm": "^1.2.8",
+    "@iconify-icons/fa": "^1.2.4",
+    "@iconify-icons/healthicons": "^1.2.6",
+    "@iconify-icons/material-symbols": "^1.2.35",
+    "@iconify/vue": "^4.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
     "@vicons/ionicons5": "^0.12.0",
-    "@vitejs/plugin-vue": "^2.3.3",
-    "autoprefixer": "^10.4.7",
-    "eslint": "^8.17.0",
+    "@vitejs/plugin-vue": "^4.1.0",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.38.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^9.1.1",
-    "naive-ui": "^2.30.3",
-    "postcss": "^8.4.14",
-    "tailwindcss": "^3.1.2",
-    "typescript": "^4.5.4",
-    "unplugin-auto-import": "^0.11.2",
-    "unplugin-vue-components": "^0.22.7",
-    "vite": "^2.9.9",
-    "vue-tsc": "^0.39.0"
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.10.0",
+    "naive-ui": "^2.34.3",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.3.1",
+    "typescript": "^5.0.4",
+    "unplugin-auto-import": "^0.15.2",
+    "unplugin-vue-components": "^0.24.1",
+    "vite": "^4.2.1",
+    "vue-tsc": "^1.2.0"
   }
 }

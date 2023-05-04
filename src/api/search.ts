@@ -5,15 +5,29 @@ export class SearchApi {
   public static async search(keyword: string): Promise<CourseModel[]> {
     const courses: CourseModel[] = [];
 
-    const courseRes = await CourseApi.getCourses({
-      courseId: null,
-      code: keyword,
-      seq: null,
-      name: keyword,
-      teacherName: keyword,
-    });
+    // TODO: replace with a better impl.
 
-    courseRes?.forEach((course) => courses.push(course));
+    (
+      await CourseApi.getCourses({
+        name: keyword,
+      })
+    ).forEach((course) => {
+      courses.push(course);
+    });
+    (
+      await CourseApi.getCourses({
+        teacherName: keyword,
+      })
+    ).forEach((course) => {
+      courses.push(course);
+    });
+    (
+      await CourseApi.getCourses({
+        code: keyword,
+      })
+    ).forEach((course) => {
+      courses.push(course);
+    });
 
     return courses;
   }
