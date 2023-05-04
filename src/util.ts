@@ -13,7 +13,6 @@ export function strHash(str: string): string {
 class WindowInfo {
   width = window.innerWidth;
   height = window.innerHeight;
-  scrollY = window.scrollY;
 
   checkIsNarrow = () => {
     return this.width < 600;

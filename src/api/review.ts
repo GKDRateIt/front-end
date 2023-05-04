@@ -36,6 +36,8 @@ export interface ReviewReadQuery {
   email?: string;
   reviewId?: number;
   userId?: number;
+  pageOffset?: number;
+  pageLimit?: number;
 }
 
 export class ReviewApi {
@@ -43,6 +45,8 @@ export class ReviewApi {
   public static async getReviews(
     readQuery: ReviewReadQuery
   ): Promise<ReviewModel[]> {
+    // console.log("Review read query:");
+    // console.log(readQuery);
     const responseBody = await submitForm({
       url: `${apiPrefix}/api/review`,
       body: setReqAction(readQuery, "read"),

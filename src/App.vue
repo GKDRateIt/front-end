@@ -22,10 +22,6 @@ onMounted(() => {
       sideBarInfo.value.collapsed = isNarrowAfter;
     }
   });
-
-  window.addEventListener("scroll", () => {
-    windowInfo.value.scrollY = window.scrollY;
-  });
 });
 </script>
 
