@@ -21,12 +21,16 @@ const selectedCourse: Ref<null | CourseModel> = ref(null);
 CourseApi.getCourses({
   code: paramCourseCode,
   codeSeq: paramCourseCodeSeq,
-}).then((rCourses) => {
-  courses.value = rCourses;
-  if (rCourses.length > 0) {
-    selectedCourse.value = rCourses[0];
-  }
-});
+})
+  .then((rCourses) => {
+    courses.value = rCourses;
+    if (rCourses.length > 0) {
+      selectedCourse.value = rCourses[0];
+    }
+  })
+  .catch((e) => {
+    message.error("数据加载错误！" + e);
+  });
 
 const userEmail = UserApi.getLoggedInUserEmail();
 
@@ -71,7 +75,7 @@ const handleCourseSelectUpdate = (value: string) => {
   }
 };
 
-const validRating = (v: Number): boolean => {
+const validRating = (v: number): boolean => {
   if (!Number.isInteger(v)) {
     return false;
   }
@@ -86,10 +90,10 @@ const submitReview = () => {
   console.log(`workload: ${workload.value}`);
   console.log(`commentText: ${commentText.value}`);
 
-  const _overallRecommendation = Number(overallRecommendation.value);
-  const _quality = Number(quality.value);
-  const _difficulty = Number(difficulty.value);
-  const _workload = Number(workload.value);
+  const _overallRecommendation = overallRecommendation.value;
+  const _quality = quality.value;
+  const _difficulty = difficulty.value;
+  const _workload = workload.value;
 
   if (
     !validRating(_overallRecommendation) ||
@@ -105,32 +109,36 @@ const submitReview = () => {
   CourseApi.getCourse({
     code: selectedCourse.value?.code,
     codeSeq: selectedCourse.value?.codeSeq,
-  }).then((course) => {
-    if (!course) {
-      message.error("找不到指定的课程");
-      return;
-    }
-    courseId = course.courseId;
-    const query: ReviewCreateQuery = {
-      courseId: courseId,
-      email: String(userEmail),
-      createTime: new Date().getTime(),
-      lastUpdateTime: new Date().getTime(),
-      overallRecommendation: overallRecommendation.value,
-      quality: quality.value,
-      difficulty: difficulty.value,
-      workload: workload.value,
-      commentText: commentText.value,
-    };
-    ReviewApi.createReview(query)
-      .then(() => {
-        message.success("评论提交成功");
-      })
-      .catch((err) => {
-        console.log("评论提交失败" + err);
-        message.error("评论提交失败" + err);
-      });
-  });
+  })
+    .then((course) => {
+      if (!course) {
+        message.error("找不到指定的课程");
+        return;
+      }
+      courseId = course.courseId;
+      const query: ReviewCreateQuery = {
+        courseId: courseId,
+        email: String(userEmail),
+        createTime: new Date().getTime(),
+        lastUpdateTime: new Date().getTime(),
+        overallRecommendation: overallRecommendation.value,
+        quality: quality.value,
+        difficulty: difficulty.value,
+        workload: workload.value,
+        commentText: commentText.value,
+      };
+      ReviewApi.createReview(query)
+        .then(() => {
+          message.success("评论提交成功");
+        })
+        .catch((err) => {
+          console.log("评论提交失败" + err);
+          message.error("评论提交失败" + err);
+        });
+    })
+    .catch((e) => {
+      message.error("数据加载错误！" + e);
+    });
 };
 
 const RatingBar = defineComponent({
