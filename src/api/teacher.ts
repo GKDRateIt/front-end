@@ -10,6 +10,8 @@ export interface TeacherReadQuery {
   teacherId?: number;
   name?: string;
   email?: string;
+  pageOffset?: number;
+  pageLimit?: number;
 }
 
 export class TeacherApi {

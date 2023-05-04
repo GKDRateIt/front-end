@@ -22,6 +22,8 @@ export interface CourseReadQuery {
   codeSeq?: string;
   name?: string;
   teacherName?: string;
+  pageOffset?: number;
+  pageLimit?: number;
 }
 
 export interface CourseCreateQuery {

@@ -32,8 +32,11 @@ export function setReqAction(
   body: any,
   action: "create" | "read" | "update" | "delete"
 ): any {
-  body._action = action;
-  return body;
+  let _body = JSON.parse(JSON.stringify(body));
+  _body._action = action;
+  // console.log("Setting req action");
+  // console.log(_body);
+  return _body;
 }
 
 export async function submitForm({
@@ -43,6 +46,7 @@ export async function submitForm({
   withPermInfo = true,
 }: IFormPostData) {
   console.log(`Querying ${url}`);
+  // console.log(body);
   const data = new URLSearchParams();
   for (const key in body) {
     if (!Object.hasOwn(body, key)) {

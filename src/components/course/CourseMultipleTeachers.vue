@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { ref, Ref, computed } from "vue";
+import { ref, Ref, computed, onMounted, onUnmounted } from "vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { TeacherApi, TeacherModel } from "../../api/teacher";
 import { CourseApi, CourseModel } from "../../api/course";
 import { ReviewApi, ReviewModel } from "../../api/review";
 import { UserApi, UserModel } from "../../api/user";
 import { formatSemester } from "../../util";
-import { NRate, NButton } from "naive-ui";
+import { NRate, NButton, NSpin } from "naive-ui";
+import CourseReviewStrip from "./CourseReviewStrip.vue";
 
 const router = useRouter();
 const route = useRoute();
+
+let reviewPageOffset = 0;
+let reviewPageLimit = 5;
 
 let courseCode = String(route.query.code);
 let courseCodeSeq = route.query.seq as string | undefined;
@@ -82,10 +86,17 @@ const avgQuality = computed(() => {
   return avg;
 });
 
-const courseLoaded = ref(false);
-const reviewLoaded = ref(false);
-const allLoaded = computed(() => {
-  return courseLoaded.value && reviewLoaded.value;
+// Indicate if data was loaded at least once.
+const courseLoadedOnce = ref(false);
+const reviewLoadedOnce = ref(false);
+const dataLoadedOnce = computed(() => {
+  return courseLoadedOnce.value && reviewLoadedOnce.value;
+});
+
+const courseLoading = ref(true);
+const reviewLoading = ref(true);
+const dataLoading = computed(() => {
+  return courseLoading.value && reviewLoading.value;
 });
 
 const reviews: Ref<ReviewModel[]> = ref([]);
@@ -98,40 +109,41 @@ const reviewCourseMap: Ref<Map<number, CourseModel>> = ref(new Map());
 
 // TODO: Join query instead of stupid manual query.
 
-const refreshData = () => {
-  courseCode = String(route.query.code);
-  courseCodeSeq = route.query.seq as string | undefined;
+const appendData = () => {
+  reviewLoading.value = true;
+  courseLoading.value = true;
 
-  selectedTeacherId.value = null;
-  courses.value = [];
-  courseTeacherMap.value = new Map();
-  reviews.value = [];
-  reviewUserMap.value = new Map();
-  reviewCourseMap.value = new Map();
-
-  CourseApi.getCourses({
-    code: courseCode,
-    ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
-  }).then((rCourses) => {
-    if (!rCourses) {
-      return;
-    }
-    courses.value = rCourses;
-    rCourses.forEach((rCourse) => {
-      TeacherApi.getTeacherById(rCourse.teacherId).then((rTeacher) => {
-        if (rTeacher) {
-          courseTeacherMap.value.set(rCourse.courseId, rTeacher);
-        }
+  if (!courseLoadedOnce.value) {
+    CourseApi.getCourses({
+      code: courseCode,
+      ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
+    }).then((rCourses) => {
+      if (!rCourses) {
+        return;
+      }
+      courses.value = courses.value.concat(rCourses);
+      rCourses.forEach((rCourse) => {
+        TeacherApi.getTeacherById(rCourse.teacherId).then((rTeacher) => {
+          if (rTeacher) {
+            courseTeacherMap.value.set(rCourse.courseId, rTeacher);
+          }
+        });
       });
+      courseLoadedOnce.value = true;
+      setTimeout(() => {
+        courseLoading.value = false;
+      }, 100);
     });
-    courseLoaded.value = true;
-  });
+  }
 
   ReviewApi.getReviews({
     courseCode: courseCode,
     ...(courseCodeSeq && { codeSeq: courseCodeSeq }),
+    pageOffset: reviewPageOffset,
+    pageLimit: reviewPageLimit,
   }).then((rReviews) => {
-    reviews.value = rReviews;
+    reviewPageOffset += rReviews.length;
+    reviews.value = reviews.value.concat(rReviews);
     rReviews.forEach((review) => {
       const mappedCourse = courses.value.find(
         (course) => course.courseId == review.courseId
@@ -145,13 +157,51 @@ const refreshData = () => {
         }
       });
     });
-    reviewLoaded.value = true;
+    reviewLoadedOnce.value = true;
+    setTimeout(() => {
+      reviewLoading.value = false;
+    }, 100);
   });
 };
 
+const refreshData = () => {
+  courseCode = String(route.query.code);
+  courseCodeSeq = route.query.seq as string | undefined;
+
+  selectedTeacherId.value = null;
+  courses.value = [];
+  courseTeacherMap.value = new Map();
+  reviews.value = [];
+  reviewUserMap.value = new Map();
+  reviewCourseMap.value = new Map();
+
+  appendData();
+};
+
+const handleScroll = () => {
+  if (
+    !reviewLoading.value &&
+    window.innerHeight + window.scrollY >= document.body.offsetHeight
+  ) {
+    console.log("Loading more reviews");
+    appendData();
+  }
+};
+
 refreshData();
+
 onBeforeRouteUpdate(() => {
   refreshData();
+});
+
+onMounted(() => {
+  console.log("Registering wheel event listener");
+  window.addEventListener("wheel", handleScroll);
+});
+
+onUnmounted(() => {
+  console.log("Removing wheel event listener");
+  window.removeEventListener("wheel", handleScroll);
 });
 
 const getTeacherByReviewId = (reviewId: number): TeacherModel | undefined => {
@@ -188,10 +238,10 @@ const newReview = () => {
 </script>
 
 <template>
-  <div v-if="!allLoaded">加载中</div>
+  <div v-if="!dataLoadedOnce">加载中</div>
   <div
     v-else-if="courses.length > 0"
-    class="flex-col space-y-5 m-10 my-20 mx-auto w-2/3"
+    class="flex-col space-y-5 m-10 my-20 mx-auto w-4/5 max-w-[900px]"
   >
     <div>
       <div class="text-sm text-neutral-500">
@@ -253,65 +303,28 @@ const newReview = () => {
       </div>
     </div>
 
-    <div class="flex-col space-y-5">
+    <div id="course-page-review-list" class="flex-col space-y-5">
       <div
         v-for="(review, index) in filteredReviews"
         :key="index"
-        class="w-4/5 bg-blue-50 rounded-lg px-3.5 py-2.5"
+        class="bg-blue-50 rounded-lg"
       >
-        <div class="flex space-x-1">
-          <div>点评 #{{ index }}</div>
-          <div>|</div>
-          <div>主讲 {{ getTeacherByReviewId(review.reviewId)?.name }}</div>
-          <div>|</div>
-          <div>评分 {{ review.overallRecommendation }}</div>
-          <div>|</div>
-          <div>评课时间 {{ ReviewApi.getFormattedTime(review) }}</div>
-        </div>
-        <div class="indent-8 text-lg">
-          {{ review.commentText }}
-        </div>
-        <div
-          class="h-auto grid gap-1"
-          style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))"
-        >
-          <div class="flex flex-row space-x-1">
-            <div>难度：</div>
-            <div>
-              <n-rate
-                readonly
-                allow-half
-                :default-value="review.difficulty"
-                size="small"
-              />
-            </div>
-          </div>
-          <div class="flex flex-row space-x-1">
-            <div>作业：</div>
-            <div>
-              <n-rate
-                allow-half
-                readonly
-                :default-value="review.workload"
-                size="small"
-              />
-            </div>
-          </div>
-          <div class="flex flex-row space-x-1">
-            <div>收获：</div>
-            <div>
-              <n-rate
-                allow-half
-                readonly
-                :default-value="review.quality"
-                size="small"
-              />
-            </div>
-          </div>
-        </div>
-        <div>来自用户 @{{ reviewUserMap.get(review.userId)?.nickname }}</div>
+        <CourseReviewStrip
+          :index="index"
+          :review="review"
+          :user="reviewUserMap.get(review.reviewId)"
+          :teacher="getTeacherByReviewId(review.reviewId)"
+        />
       </div>
     </div>
+
+    <div class="w-fit mx-auto">
+      <div v-if="dataLoading">
+        <n-spin size="medium" stroke="#2755a5" :stroke-width="20" />
+      </div>
+      <div v-else class="text-gray-500">下拉查看更多评论</div>
+    </div>
+
     <div class="text-lg">
       <span>我也要评价！</span>
       <span>立刻</span>
@@ -319,6 +332,7 @@ const newReview = () => {
         <n-button @click="newReview"> 新增点评 </n-button>
       </span>
     </div>
+    <div class="h-5"></div>
   </div>
   <div v-else>找不到课程</div>
 </template>
